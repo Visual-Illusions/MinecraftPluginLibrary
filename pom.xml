@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>net.visualillusionsent</groupId>
+    <artifactId>vimcplugin</artifactId>
+    <name>VIMCPlugin</name>
+    <!-- Change minor version if library functionality changes, update number if a dependency version has changed -->
+    <version>1.1u1-SNAPSHOT</version>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <viutils.version>1.2.0</viutils.version>
+        <canary.version>1.0-RC-2</canary.version>
+        <bukkit.version>1.6.2-R1.0</bukkit.version>
+        <spout.version>1.0.0-SNAPSHOT</spout.version>
+        <spout.vanilla.version>1.6.4-SNAPSHOT</spout.vanilla.version>
+    </properties>
+    <description>
+        Visual Illusions Minecraft Plugin Library
+        Designed as a base for all Visual Illusions plugins
+    </description>
+    <licenses>
+        <license>
+            <name>GNU Lesser General Public License v3</name>
+            <url>http://www.gnu.org/licenses/lgpl.html</url>
+            <comments>
+                Visual Illusions Minecraft Plugin Library is free software: you can redistribute it and/or modify
+                it under the terms of the GNU Lesser General Public License as published by
+                the Free Software Foundation, either version 3 of the License, or
+                (at your option) any later version.
+
+                Visual Illusions Minecraft Plugin Library is distributed in the hope that it will be useful, but WITHOUT
+                ANY WARRANTY;
+                without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+                See the GNU Lesser General Public License for more details.
+            </comments>
+        </license>
+    </licenses>
+    <inceptionYear>2013</inceptionYear>
+    <organization>
+        <name>Visual Illusions Entertainment</name>
+        <url>http://visualillusionsent.net</url>
+    </organization>
+    <scm>
+        <url>https://github.com/Visual-Illusions/VIMinecraftPlugin</url>
+        <connection>GitHub</connection>
+        <developerConnection>scm:git:git@github.com:Visual-Illusions/VIMinecraftPlugin.git</developerConnection>
+    </scm>
+    <issueManagement>
+        <url>http://github.com/Visual-Illusions/VIMinecraftPlugin/issues</url>
+        <system>GitHub Issues Tracker</system>
+    </issueManagement>
+    <ciManagement>
+        <url>http://ci.visualillusionsent.net/job/VIMinecraftPlugin</url>
+        <system>Jenkins</system>
+    </ciManagement>
+    <distributionManagement>
+        <repository>
+            <id>vi-repo</id>
+            <url>ftp://repo.visualillusionsent.net/</url>
+        </repository>
+    </distributionManagement>
+    <repositories>
+        <!-- VIUtils & Canary -->
+        <repository>
+            <id>vi-repo</id>
+            <name>Visual Illusions Repository</name>
+            <url>http://repo.visualillusionsent.net/</url>
+            <releases>
+                <updatePolicy>always</updatePolicy>
+            </releases>
+            <snapshots>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+        <!-- Bukkit -->
+        <repository>
+            <id>repo-bukkit</id>
+            <name>Bukkit Public Repository</name>
+            <url>http://repo.bukkit.org/content/groups/public</url>
+        </repository>
+        <!-- Spout/Vanilla -->
+        <repository>
+            <id>sonatype-nexus-releases</id>
+            <url>https://oss.sonatype.org/content/repositories/releases</url>
+        </repository>
+        <repository>
+            <id>sonatype-nexus-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>net.visualillusionsent</groupId>
+                <artifactId>viutils</artifactId>
+                <version>${viutils.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.bukkit</groupId>
+                <artifactId>bukkit</artifactId>
+                <version>${bukkit.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>net.canarymod</groupId>
+                <artifactId>CanaryLib</artifactId>
+                <version>${canary.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.spout</groupId>
+                <artifactId>spout-api</artifactId>
+                <version>${spout.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.spout</groupId>
+                <artifactId>vanilla</artifactId>
+                <version>${spout.vanilla.version}</version>
+                <scope>compile</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <dependencies>
+        <!-- Mods -->
+        <dependency>
+            <groupId>net.canarymod</groupId>
+            <artifactId>CanaryLib</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>bukkit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.spout</groupId>
+            <artifactId>spout-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.spout</groupId>
+            <artifactId>vanilla</artifactId>
+        </dependency>
+        <!-- Mods End -->
+        <!-- Libraries -->
+        <dependency>
+            <groupId>net.visualillusionsent</groupId>
+            <artifactId>viutils</artifactId>
+        </dependency>
+        <!-- Libraries End -->
+    </dependencies>
+    <build>
+        <plugins>
+            <!-- License Header -->
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>2.3</version>
+                <executions>
+                    <execution>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <header>${basedir}/HEADER.txt</header>
+                    <encoding>UTF-8</encoding>
+                    <mapping>
+                        <java>SLASHSTAR_STYLE</java>
+                    </mapping>
+                    <properties>
+                        <name>${project.name}</name>
+                        <years>${project.inceptionYear}</years>
+                        <gpl.type>GNU Lesser General Public License</gpl.type>
+                        <license.url>http://www.gnu.org/licenses/lgpl.html</license.url>
+                    </properties>
+                    <includes>
+                        <include>src/main/java/**</include>
+                    </includes>
+                </configuration>
+            </plugin>
+            <!-- Compile plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <!-- Need to target 1.6 for compatibility -->
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+        </plugins>
+        <extensions>
+            <!-- FTP Extension to upload to repo.visualillusionsent.net -->
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ftp</artifactId>
+                <version>2.5</version>
+            </extension>
+        </extensions>
+    </build>
+</project>
