@@ -6,3 +6,5 @@
 /buildNumber.properties
 /.idea
 *.iml
+pom.xml.bak
+pom.xml.dev.bak
