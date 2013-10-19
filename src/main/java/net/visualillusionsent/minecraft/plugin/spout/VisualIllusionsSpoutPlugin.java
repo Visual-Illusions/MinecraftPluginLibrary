@@ -36,15 +36,12 @@ import java.util.jar.JarFile;
  */
 public abstract class VisualIllusionsSpoutPlugin extends Plugin implements VisualIllusionsPlugin {
 
-    private final VersionChecker vc;
+    private VersionChecker vc;
     private YamlConfiguration pluginyml;
-
-    public VisualIllusionsSpoutPlugin(){
-        this.vc = new VersionChecker(getName(), getDescription().getVersion(), getBuild(), getVersionCheckURL(), getStatus(), false);
-    }
 
     @Override
     public void onEnable() {
+        this.vc = new VersionChecker(getName(), getDescription().getVersion(), getBuild(), getVersionCheckURL(), getStatus(), false);
         VisualIllusionsMinecraftPlugin.checkVersion(this);
         VisualIllusionsMinecraftPlugin.checkStatus(this);
     }
@@ -94,15 +91,10 @@ public abstract class VisualIllusionsSpoutPlugin extends Plugin implements Visua
         }
     }
 
-    private final String getVersionCheckURL() {
+    public final String getVersionCheckURL() {
         return getPluginYML().getChild("version.check.url").getString("missing.url");
     }
 
-    /**
-     * Gets the plugin.yml file for the Plugin
-     *
-     * @return plugin.yml
-     */
     private YamlConfiguration getPluginYML() {
         if (pluginyml == null) {
             try {
@@ -120,23 +112,5 @@ public abstract class VisualIllusionsSpoutPlugin extends Plugin implements Visua
 
     private String getJarPath() {
         return JarUtils.getJarPath(this.getClass());
-    }
-
-    /**
-     * Used to define the Plugin's name at the time the class was constructed
-     *
-     * @return plugin name
-     */
-    private String getDefinedName() {
-        return getPluginYML().getChild("name").getString("missing.name");
-    }
-
-    /**
-     * Used to define the Plugin's version at the time the class was constructed
-     *
-     * @return plugin version
-     */
-    private String getDefinedVersion() {
-        return getPluginYML().getChild("version").getString("missing.version");
     }
 }

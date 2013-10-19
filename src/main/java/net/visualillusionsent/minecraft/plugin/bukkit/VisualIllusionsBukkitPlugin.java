@@ -90,6 +90,10 @@ public abstract class VisualIllusionsBukkitPlugin extends JavaPlugin implements 
         return getPluginYML().getString("copyright.years", String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
     }
 
+    private String getVersionCheckURL() {
+        return getPluginYML().getString("version.check.url", "missing.url");
+    }
+
     @Override
     public final ProgramStatus getStatus() {
         try {
@@ -100,15 +104,10 @@ public abstract class VisualIllusionsBukkitPlugin extends JavaPlugin implements 
         }
     }
 
-    /**
-     * Gets the plugin.yml file for the Plugin
-     *
-     * @return plugin.yml
-     */
     private YamlConfiguration getPluginYML() {
         if (!pluginyml.contains("name")) {
             try {
-                JarFile jfile = new JarFile(JarUtils.getJarPath(getClass()));
+                JarFile jfile = new JarFile(getJarPath());
                 JarEntry pyml = jfile.getJarEntry("plugin.yml");
                 pluginyml.load(jfile.getInputStream(pyml));
             }
@@ -119,25 +118,17 @@ public abstract class VisualIllusionsBukkitPlugin extends JavaPlugin implements 
         return this.pluginyml;
     }
 
-    /**
-     * Used to define the Plugin's name at the time the class was constructed
-     *
-     * @return plugin name
-     */
+    private String getJarPath() {
+        return JarUtils.getJarPath(getClass());
+    }
+
+    // Bukkit is late to define these properties so we grab them directly from our plugin.yml instance
     private String getDefinedName() {
-        return getPluginYML().getString("name", "missing.name");
+        return getPluginYML().getString("name");
     }
 
-    /**
-     * Used to define the Plugin's version at the time the class was constructed
-     *
-     * @return plugin version
-     */
     private String getDefinedVersion() {
-        return getPluginYML().getString("version", "missing.version");
+        return getPluginYML().getString("version");
     }
-
-    private String getVersionCheckURL() {
-        return getPluginYML().getString("version.check.url", "missing.url");
-    }
+    //
 }
