@@ -90,7 +90,7 @@ public abstract class VisualIllusionsCanaryPlugin extends Plugin implements Visu
         }
     }
 
-    public final String getVersionCheckURL() {
+    private final String getVersionCheckURL() {
         return getCanaryInf().getString("version.check.url", "missing.url");
     }
 }
