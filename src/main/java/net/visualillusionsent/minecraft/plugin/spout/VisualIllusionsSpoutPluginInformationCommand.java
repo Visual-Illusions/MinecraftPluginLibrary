@@ -18,9 +18,7 @@
 package net.visualillusionsent.minecraft.plugin.spout;
 
 import net.visualillusionsent.minecraft.plugin.VisualIllusionsInformationCommand;
-import net.visualillusionsent.utils.VersionChecker;
 import org.spout.api.command.CommandSource;
-import org.spout.vanilla.ChatStyle;
 
 /**
  * Visual Illusions Spout Plugin Information command
@@ -33,31 +31,14 @@ public abstract class VisualIllusionsSpoutPluginInformationCommand extends Visua
         super(plugin);
     }
 
-    protected final void sendInformation(CommandSource source) {
-        for (String msg : about) {
-            if (msg.equals("$VERSION_CHECK$")) {
-                VersionChecker vc = plugin.getVersionChecker();
-                Boolean isLatest = vc.isLatest();
-                if (isLatest == null) {
-                    source.sendMessage(center(ChatStyle.DARK_GRAY + "VersionCheckerError: " + vc.getErrorMessage()));
-                }
-                else if (!isLatest) {
-                    source.sendMessage(center(ChatStyle.DARK_GRAY + vc.getUpdateAvailibleMessage()));
-                }
-                else {
-                    source.sendMessage(center(ChatStyle.GREEN + "Latest Version Installed"));
-                }
-
-                messageInject(source);
-            }
-            else {
-                source.sendMessage(msg);
-            }
-        }
+    protected final void sendInformation(CommandSource receiver) {
+        this.sendInformation(new SpoutMessageReceiver(receiver));
     }
 
-    protected void messageInject(CommandSource receiver) {
+    @Override
+    protected String[] messageInject() {
         // Implementing plugin can override this to inject messages
+        return null;
     }
 
     @Override

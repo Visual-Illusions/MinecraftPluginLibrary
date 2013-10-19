@@ -17,6 +17,7 @@
  */
 package net.visualillusionsent.minecraft.plugin.spout;
 
+import net.visualillusionsent.minecraft.plugin.VisualIllusionsMinecraftPlugin;
 import net.visualillusionsent.minecraft.plugin.VisualIllusionsPlugin;
 import net.visualillusionsent.utils.JarUtils;
 import net.visualillusionsent.utils.ProgramStatus;
@@ -41,39 +42,46 @@ public abstract class VisualIllusionsSpoutPlugin extends Plugin implements Visua
     @Override
     public void onEnable() {
         this.vc = new VersionChecker(getName(), getDescription().getVersion(), getBuild(), getVersionCheckURL(), getStatus(), false);
-        checkVersion();
-        checkStatus();
+        VisualIllusionsMinecraftPlugin.checkVersion(this);
+        VisualIllusionsMinecraftPlugin.checkStatus(this);
     }
 
-    protected final void checkStatus() {
-        String statusReport = "%s has declared itself as '%s' build. %s";
-        switch (this.getStatus()) {
-            case UNKNOWN:
-                getLogger().severe(String.format(statusReport, getName(), "UNKNOWN STATUS", "Use is not advised and could cause damage to your system!"));
-                break;
-            case ALPHA:
-                getLogger().severe(String.format(statusReport, getName(), "ALPHA", "Production use is not advised!"));
-                break;
-            case BETA:
-                getLogger().severe(String.format(statusReport, getName(), "BETA", "Production use is not advised!"));
-                break;
-            case RELEASE_CANDIDATE:
-                getLogger().severe(String.format(statusReport, getName(), "RELEASE CANDIDATE", "Expect some bugs."));
-                break;
-        }
+    @Override
+    public final String getBuild() {
+        return getPluginYML().getChild("build.number").getString("0");
     }
 
-    protected final void checkVersion() {
-        Boolean islatest = vc.isLatest();
-        if (islatest == null) {
-            getLogger().warning("VersionCheckerError: " + vc.getErrorMessage());
-        }
-        else if (!islatest) {
-            getLogger().warning(vc.getUpdateAvailibleMessage());
-            getLogger().warning(String.format("You can view update info @ %s#ChangeLog", getWikiURL()));
-        }
+    @Override
+    public final String getBuildTime() {
+        return getPluginYML().getChild("build.time").getString("19700101-0000");
     }
 
+    @Override
+    public final VersionChecker getVersionChecker() {
+        return vc;
+    }
+
+    @Override
+    public final String getWikiURL() {
+        return getPluginYML().getChild("website").getString("missing.url");
+    }
+
+    @Override
+    public final String getIssuesURL() {
+        return getPluginYML().getChild("issues.url").getString("missing.url");
+    }
+
+    @Override
+    public final String getDevelopers() {
+        return getPluginYML().getChild("developers").getString("missing.developers");
+    }
+
+    @Override
+    public final String getCopyYear() {
+        return getPluginYML().getChild("copyright.years").getString(String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
+    }
+
+    @Override
     public final ProgramStatus getStatus() {
         try {
             return ProgramStatus.valueOf(getPluginYML().getChild("program.status").getString().toUpperCase());
@@ -83,36 +91,8 @@ public abstract class VisualIllusionsSpoutPlugin extends Plugin implements Visua
         }
     }
 
-    public final String getBuild() {
-        return getPluginYML().getChild("build.number").getString("0");
-    }
-
-    public final String getBuildTime() {
-        return getPluginYML().getChild("build.time").getString("19700101-0000");
-    }
-
-    public final VersionChecker getVersionChecker() {
-        return vc;
-    }
-
     public final String getVersionCheckURL() {
         return getPluginYML().getChild("version.check.url").getString("missing.url");
-    }
-
-    public final String getWikiURL() {
-        return getPluginYML().getChild("website").getString("missing.url");
-    }
-
-    public final String getIssuesURL() {
-        return getPluginYML().getChild("issues.url").getString("missing.url");
-    }
-
-    public final String getDevelopers() {
-        return getPluginYML().getChild("developers").getString("missing.developers");
-    }
-
-    public final String getCopyYear() {
-        return getPluginYML().getChild("copyright.years").getString(String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
     }
 
     private YamlConfiguration getPluginYML() {

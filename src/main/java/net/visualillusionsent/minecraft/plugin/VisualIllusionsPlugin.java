@@ -17,7 +17,10 @@
  */
 package net.visualillusionsent.minecraft.plugin;
 
+import net.visualillusionsent.utils.ProgramStatus;
 import net.visualillusionsent.utils.VersionChecker;
+
+import java.util.logging.Logger;
 
 /**
  * Base Visual Illusions Plugin interface
@@ -43,4 +46,8 @@ public interface VisualIllusionsPlugin {
     String getCopyYear();
 
     VersionChecker getVersionChecker();
+
+    ProgramStatus getStatus();
+
+    Logger getPluginLogger();
 }

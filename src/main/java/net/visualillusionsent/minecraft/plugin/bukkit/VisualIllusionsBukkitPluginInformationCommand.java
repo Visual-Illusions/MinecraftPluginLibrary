@@ -18,8 +18,6 @@
 package net.visualillusionsent.minecraft.plugin.bukkit;
 
 import net.visualillusionsent.minecraft.plugin.VisualIllusionsInformationCommand;
-import net.visualillusionsent.utils.VersionChecker;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
@@ -35,30 +33,13 @@ public abstract class VisualIllusionsBukkitPluginInformationCommand extends Visu
     }
 
     protected final void sendInformation(CommandSender receiver) {
-        for (String msg : about) {
-            if (msg.equals("$VERSION_CHECK$")) {
-                VersionChecker vc = plugin.getVersionChecker();
-                Boolean isLatest = vc.isLatest();
-                if (isLatest == null) {
-                    receiver.sendMessage(center(ChatColor.DARK_GRAY + "VersionCheckerError: " + vc.getErrorMessage()));
-                }
-                else if (!isLatest) {
-                    receiver.sendMessage(center(ChatColor.DARK_GRAY + vc.getUpdateAvailibleMessage()));
-                }
-                else {
-                    receiver.sendMessage(center(ChatColor.GREEN + "Latest Version Installed"));
-                }
-
-                messageInject(receiver);
-            }
-            else {
-                receiver.sendMessage(msg);
-            }
-        }
+        this.sendInformation(new BukkitMessageReciever(receiver));
     }
 
-    protected void messageInject(CommandSender receiver) {
+    @Override
+    protected String[] messageInject() {
         // Implementing plugin can override this to inject messages
+        return null;
     }
 
     @Override

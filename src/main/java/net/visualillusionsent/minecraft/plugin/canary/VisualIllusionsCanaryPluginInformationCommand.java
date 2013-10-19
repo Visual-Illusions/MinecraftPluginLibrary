@@ -17,11 +17,9 @@
  */
 package net.visualillusionsent.minecraft.plugin.canary;
 
-import net.canarymod.chat.Colors;
 import net.canarymod.chat.MessageReceiver;
 import net.canarymod.commandsys.CommandListener;
 import net.visualillusionsent.minecraft.plugin.VisualIllusionsInformationCommand;
-import net.visualillusionsent.utils.VersionChecker;
 
 /**
  * Visual Illusions Canary Plugin Information command
@@ -35,30 +33,13 @@ public abstract class VisualIllusionsCanaryPluginInformationCommand extends Visu
     }
 
     protected final void sendInformation(MessageReceiver receiver) {
-        for (String msg : about) {
-            if (msg.equals("$VERSION_CHECK$")) {
-                VersionChecker vc = plugin.getVersionChecker();
-                Boolean isLatest = vc.isLatest();
-                if (isLatest == null) {
-                    receiver.message(center(Colors.GRAY + "VersionCheckerError: " + vc.getErrorMessage()));
-                }
-                else if (!isLatest) {
-                    receiver.message(center(Colors.GRAY + vc.getUpdateAvailibleMessage()));
-                }
-                else {
-                    receiver.message(center(Colors.LIGHT_GREEN + "Latest Version Installed"));
-                }
-
-                messageInject(receiver);
-            }
-            else {
-                receiver.message(msg);
-            }
-        }
+        sendInformation(new CanaryMessageReceiver(receiver));
     }
 
-    protected void messageInject(MessageReceiver receiver) {
+    @Override
+    protected String[] messageInject() {
         // Implementing plugin can override this to inject messages
+        return null;
     }
 
     @Override

@@ -17,6 +17,7 @@
  */
 package net.visualillusionsent.minecraft.plugin.bukkit;
 
+import net.visualillusionsent.minecraft.plugin.VisualIllusionsMinecraftPlugin;
 import net.visualillusionsent.minecraft.plugin.VisualIllusionsPlugin;
 import net.visualillusionsent.utils.JarUtils;
 import net.visualillusionsent.utils.ProgramStatus;
@@ -45,39 +46,55 @@ public abstract class VisualIllusionsBukkitPlugin extends JavaPlugin implements 
 
     @Override
     public void onEnable() {
-        checkVersion();
-        checkStatus();
+        VisualIllusionsMinecraftPlugin.checkVersion(this);
+        VisualIllusionsMinecraftPlugin.checkStatus(this);
     }
 
-    protected final void checkStatus() {
-        String statusReport = "%s has declared itself as '%s' build. %s";
-        switch (this.getStatus()) {
-            case UNKNOWN:
-                getLogger().severe(String.format(statusReport, getName(), "UNKNOWN STATUS", "Use is not advised and could cause damage to your system!"));
-                break;
-            case ALPHA:
-                getLogger().severe(String.format(statusReport, getName(), "ALPHA", "Production use is not advised!"));
-                break;
-            case BETA:
-                getLogger().severe(String.format(statusReport, getName(), "BETA", "Production use is not advised!"));
-                break;
-            case RELEASE_CANDIDATE:
-                getLogger().severe(String.format(statusReport, getName(), "RELEASE CANDIDATE", "Expect some bugs."));
-                break;
-        }
+    @Override
+    public final String getVersion() {
+        return getDescription().getVersion();
     }
 
-    protected final void checkVersion() {
-        Boolean isLatest = vc.isLatest();
-        if (isLatest == null) {
-            getLogger().warning("VersionCheckerError: " + vc.getErrorMessage());
-        }
-        else if (!isLatest) {
-            getLogger().warning(vc.getUpdateAvailibleMessage());
-            getLogger().warning(String.format("You can view update info @ %s#ChangeLog", getWikiURL()));
-        }
+    @Override
+    public final String getBuild() {
+        return getPluginYML().getString("build.number", "0");
     }
 
+    @Override
+    public final String getBuildTime() {
+        return getPluginYML().getString("build.time", "19700101-0000");
+    }
+
+    @Override
+    public final VersionChecker getVersionChecker() {
+        return vc;
+    }
+
+    @Override
+    public final String getWikiURL() {
+        return getPluginYML().getString("website", "missing.url");
+    }
+
+    @Override
+    public final String getIssuesURL() {
+        return getPluginYML().getString("issues.url", "missing.url");
+    }
+
+    @Override
+    public final String getDevelopers() {
+        return getPluginYML().getString("developers", "missing.developers");
+    }
+
+    @Override
+    public final String getCopyYear() {
+        return getPluginYML().getString("copyright.years", String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
+    }
+
+    private String getVersionCheckURL() {
+        return getPluginYML().getString("version.check.url", "missing.url");
+    }
+
+    @Override
     public final ProgramStatus getStatus() {
         try {
             return ProgramStatus.valueOf(getPluginYML().getString("program.status").toUpperCase());
@@ -85,42 +102,6 @@ public abstract class VisualIllusionsBukkitPlugin extends JavaPlugin implements 
         catch (Exception ex) {
             return ProgramStatus.UNKNOWN;
         }
-    }
-
-    public final String getVersion() {
-        return getDescription().getVersion();
-    }
-
-    public final String getBuild() {
-        return getPluginYML().getString("build.number", "0");
-    }
-
-    public final String getBuildTime() {
-        return getPluginYML().getString("build.time", "19700101-0000");
-    }
-
-    public final VersionChecker getVersionChecker() {
-        return vc;
-    }
-
-    public final String getVersionCheckURL() {
-        return getPluginYML().getString("version.check.url", "missing.url");
-    }
-
-    public final String getWikiURL() {
-        return getPluginYML().getString("website", "missing.url");
-    }
-
-    public final String getIssuesURL() {
-        return getPluginYML().getString("issues.url", "missing.url");
-    }
-
-    public final String getDevelopers() {
-        return getPluginYML().getString("developers", "missing.developers");
-    }
-
-    public final String getCopyYear() {
-        return getPluginYML().getString("copyright.years", String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
     }
 
     private YamlConfiguration getPluginYML() {

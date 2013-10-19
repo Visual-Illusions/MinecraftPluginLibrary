@@ -18,6 +18,7 @@
 package net.visualillusionsent.minecraft.plugin.canary;
 
 import net.canarymod.plugin.Plugin;
+import net.visualillusionsent.minecraft.plugin.VisualIllusionsMinecraftPlugin;
 import net.visualillusionsent.minecraft.plugin.VisualIllusionsPlugin;
 import net.visualillusionsent.utils.ProgramStatus;
 import net.visualillusionsent.utils.VersionChecker;
@@ -39,40 +40,47 @@ public abstract class VisualIllusionsCanaryPlugin extends Plugin implements Visu
 
     @Override
     public boolean enable() {
-        checkVersion();
-        checkStatus();
+        VisualIllusionsMinecraftPlugin.checkVersion(this);
+        VisualIllusionsMinecraftPlugin.checkStatus(this);
         return true;
     }
 
-    protected final void checkStatus() {
-        String statusReport = "%s has declared itself as '%s' build. %s";
-        switch (this.getStatus()) {
-            case UNKNOWN:
-                getLogman().severe(String.format(statusReport, getName(), "UNKNOWN STATUS", "Use is not advised and could cause damage to your system!"));
-                break;
-            case ALPHA:
-                getLogman().severe(String.format(statusReport, getName(), "ALPHA", "Production use is not advised!"));
-                break;
-            case BETA:
-                getLogman().severe(String.format(statusReport, getName(), "BETA", "Production use is not advised!"));
-                break;
-            case RELEASE_CANDIDATE:
-                getLogman().severe(String.format(statusReport, getName(), "RELEASE CANDIDATE", "Expect some bugs."));
-                break;
-        }
+    @Override
+    public final String getBuild() {
+        return getCanaryInf().getString("build.number", "0");
     }
 
-    protected final void checkVersion() {
-        Boolean isLatest = vc.isLatest();
-        if (isLatest == null) {
-            getLogman().warning("VersionCheckerError: " + vc.getErrorMessage());
-        }
-        else if (!isLatest) {
-            getLogman().warning(vc.getUpdateAvailibleMessage());
-            getLogman().warning(String.format("You can view update info @ %s#ChangeLog", getWikiURL()));
-        }
+    @Override
+    public final String getBuildTime() {
+        return getCanaryInf().getString("build.time", "19700101-0000");
     }
 
+    @Override
+    public final VersionChecker getVersionChecker() {
+        return vc;
+    }
+
+    @Override
+    public final String getWikiURL() {
+        return getCanaryInf().getString("wiki.url", "missing.url");
+    }
+
+    @Override
+    public final String getIssuesURL() {
+        return getCanaryInf().getString("issues.url", "missing.url");
+    }
+
+    @Override
+    public final String getDevelopers() {
+        return getCanaryInf().getString("developers", "missing.developers");
+    }
+
+    @Override
+    public final String getCopyYear() {
+        return getCanaryInf().getString("copyright.years", String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
+    }
+
+    @Override
     public final ProgramStatus getStatus() {
         try {
             return ProgramStatus.valueOf(getCanaryInf().getString("program.status").toUpperCase());
@@ -82,35 +90,7 @@ public abstract class VisualIllusionsCanaryPlugin extends Plugin implements Visu
         }
     }
 
-    public final String getBuild() {
-        return getCanaryInf().getString("build.number", "0");
-    }
-
-    public final String getBuildTime() {
-        return getCanaryInf().getString("build.time", "19700101-0000");
-    }
-
-    public final VersionChecker getVersionChecker() {
-        return vc;
-    }
-
     public final String getVersionCheckURL() {
         return getCanaryInf().getString("version.check.url", "missing.url");
-    }
-
-    public final String getWikiURL() {
-        return getCanaryInf().getString("wiki.url", "missing.url");
-    }
-
-    public final String getIssuesURL() {
-        return getCanaryInf().getString("issues.url", "missing.url");
-    }
-
-    public final String getDevelopers() {
-        return getCanaryInf().getString("developers", "missing.developers");
-    }
-
-    public final String getCopyYear() {
-        return getCanaryInf().getString("copyright.years", String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
     }
 }
