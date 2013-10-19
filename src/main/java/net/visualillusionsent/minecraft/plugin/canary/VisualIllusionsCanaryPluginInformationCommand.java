@@ -19,57 +19,50 @@ package net.visualillusionsent.minecraft.plugin.canary;
 
 import net.canarymod.chat.Colors;
 import net.canarymod.chat.MessageReceiver;
-import net.canarymod.chat.TextFormat;
 import net.canarymod.commandsys.CommandListener;
-import net.visualillusionsent.utils.StringUtils;
+import net.visualillusionsent.minecraft.plugin.VisualIllusionsInformationCommand;
 import net.visualillusionsent.utils.VersionChecker;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Visual Illusions Canary Plugin Information command
  *
  * @author Jason (darkdiplomat)
  */
-public abstract class VisualIllusionsCanaryPluginInformationCommand implements CommandListener {
-    protected final List<String> about;
-    protected final VisualIllusionsCanaryPlugin plugin;
-    private static final String copyIllusions = "§BCopyright © %s §AVisual §6I§9l§Bl§4u§As§2i§5o§En§7s §6Entertainment";
+public abstract class VisualIllusionsCanaryPluginInformationCommand extends VisualIllusionsInformationCommand implements CommandListener {
 
     public VisualIllusionsCanaryPluginInformationCommand(VisualIllusionsCanaryPlugin plugin) {
-        this.plugin = plugin;
-        List<String> pre = new ArrayList<String>();
-        pre.add(center(Colors.CYAN + "---" + Colors.LIGHT_GREEN + plugin.getName() + " " + Colors.ORANGE + "v" + plugin.getVersion() + Colors.CYAN + " ---"));
-        pre.add("$VERSION_CHECK$");
-        pre.add(Colors.CYAN + "Jenkins Build: " + Colors.LIGHT_GREEN + plugin.getBuild());
-        pre.add(Colors.CYAN + "Built On: " + Colors.LIGHT_GREEN + plugin.getBuildTime());
-        pre.add(Colors.CYAN + "Developer(s): " + Colors.LIGHT_GREEN + plugin.getDevelopers());
-        pre.add(Colors.CYAN + "Website: " + Colors.LIGHT_GREEN + plugin.getWikiURL());
-        pre.add(Colors.CYAN + "Issues: " + Colors.LIGHT_GREEN + plugin.getIssuesURL());
-
-        // Next line should always remain at the end of the About
-        pre.add(center(String.format(copyIllusions, plugin.getCopyYear())));
-        about = Collections.unmodifiableList(pre);
+        super(plugin);
     }
 
-    protected final String center(String toCenter) {
-        String strColorless = TextFormat.removeFormatting(toCenter);
-        return StringUtils.padCharLeft(toCenter, (int) (Math.floor(63 - strColorless.length()) / 2), ' ');
+    protected final void sendInformation(MessageReceiver receiver) {
+        for (String msg : about) {
+            if (msg.equals("$VERSION_CHECK$")) {
+                VersionChecker vc = plugin.getVersionChecker();
+                Boolean isLatest = vc.isLatest();
+                if (isLatest == null) {
+                    receiver.message(center(Colors.GRAY + "VersionCheckerError: " + vc.getErrorMessage()));
+                }
+                else if (!isLatest) {
+                    receiver.message(center(Colors.GRAY + vc.getUpdateAvailibleMessage()));
+                }
+                else {
+                    receiver.message(center(Colors.LIGHT_GREEN + "Latest Version Installed"));
+                }
+
+                messageInject(receiver);
+            }
+            else {
+                receiver.message(msg);
+            }
+        }
     }
 
-    protected final void versionCheck(MessageReceiver msgrec) {
-        VersionChecker vc = plugin.getVersionChecker();
-        Boolean isLatest = vc.isLatest();
-        if (isLatest == null) {
-            msgrec.message(center(Colors.GRAY + "VersionCheckerError: " + vc.getErrorMessage()));
-        }
-        else if (!isLatest) {
-            msgrec.message(center(Colors.GRAY + vc.getUpdateAvailibleMessage()));
-        }
-        else {
-            msgrec.message(center(Colors.LIGHT_GREEN + "Latest Version Installed"));
-        }
+    protected void messageInject(MessageReceiver receiver) {
+        // Implementing plugin can override this to inject messages
+    }
+
+    @Override
+    protected VisualIllusionsCanaryPlugin getPlugin() {
+        return (VisualIllusionsCanaryPlugin) plugin;
     }
 }

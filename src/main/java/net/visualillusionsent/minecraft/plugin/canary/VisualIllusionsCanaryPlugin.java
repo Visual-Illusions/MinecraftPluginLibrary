@@ -18,6 +18,7 @@
 package net.visualillusionsent.minecraft.plugin.canary;
 
 import net.canarymod.plugin.Plugin;
+import net.visualillusionsent.minecraft.plugin.VisualIllusionsPlugin;
 import net.visualillusionsent.utils.ProgramStatus;
 import net.visualillusionsent.utils.VersionChecker;
 
@@ -28,7 +29,7 @@ import java.util.Calendar;
  *
  * @author Jason (darkdiplomat)
  */
-public abstract class VisualIllusionsCanaryPlugin extends Plugin {
+public abstract class VisualIllusionsCanaryPlugin extends Plugin implements VisualIllusionsPlugin {
 
     private final VersionChecker vc;
 

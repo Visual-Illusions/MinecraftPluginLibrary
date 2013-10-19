@@ -17,13 +17,13 @@
  */
 package net.visualillusionsent.minecraft.plugin.spout;
 
+import net.visualillusionsent.minecraft.plugin.VisualIllusionsPlugin;
+import net.visualillusionsent.utils.JarUtils;
 import net.visualillusionsent.utils.ProgramStatus;
 import net.visualillusionsent.utils.VersionChecker;
 import org.spout.api.plugin.Plugin;
 import org.spout.cereal.config.yaml.YamlConfiguration;
 
-import java.net.URISyntaxException;
-import java.security.CodeSource;
 import java.util.Calendar;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -33,7 +33,7 @@ import java.util.jar.JarFile;
  *
  * @author Jason (darkdiplomat)
  */
-public abstract class VisualIllusionsSpoutPlugin extends Plugin {
+public abstract class VisualIllusionsSpoutPlugin extends Plugin implements VisualIllusionsPlugin {
 
     private VersionChecker vc;
     private YamlConfiguration pluginyml;
@@ -130,13 +130,7 @@ public abstract class VisualIllusionsSpoutPlugin extends Plugin {
         return this.pluginyml;
     }
 
-    private String getJarPath() { // For when the jar isn't SearchIds.jar
-        try {
-            CodeSource codeSource = this.getClass().getProtectionDomain().getCodeSource();
-            return codeSource.getLocation().toURI().getPath();
-        }
-        catch (URISyntaxException ex) {
-        }
-        return "plugins/SearchIds.jar";
+    private String getJarPath() {
+        return JarUtils.getJarPath(this.getClass());
     }
 }

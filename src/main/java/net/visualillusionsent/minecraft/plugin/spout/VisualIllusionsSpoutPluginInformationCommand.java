@@ -17,57 +17,51 @@
  */
 package net.visualillusionsent.minecraft.plugin.spout;
 
-import net.visualillusionsent.utils.StringUtils;
+import net.visualillusionsent.minecraft.plugin.VisualIllusionsInformationCommand;
 import net.visualillusionsent.utils.VersionChecker;
 import org.spout.api.command.CommandSource;
 import org.spout.vanilla.ChatStyle;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Visual Illusions Spout Plugin Information command
  *
  * @author Jason (darkdiplomat)
  */
-public abstract class VisualIllusionsSpoutPluginInformationCommand {
-    protected final List<String> about;
-    protected final VisualIllusionsSpoutPlugin plugin;
-    private static final String copyIllusions = "§BCopyright © %s §AVisual §6I§9l§Bl§4u§As§2i§5o§En§7s §6Entertainment";
+public abstract class VisualIllusionsSpoutPluginInformationCommand extends VisualIllusionsInformationCommand {
 
     public VisualIllusionsSpoutPluginInformationCommand(VisualIllusionsSpoutPlugin plugin) {
-        this.plugin = plugin;
-        List<String> pre = new ArrayList<String>();
-        pre.add(center(ChatStyle.AQUA + "---" + ChatStyle.GREEN + plugin.getName() + " " + ChatStyle.GOLD + "v" + plugin.getDescription().getVersion() + ChatStyle.AQUA + " ---"));
-        pre.add("$VERSION_CHECK$");
-        pre.add(ChatStyle.AQUA + "Jenkins Build: " + ChatStyle.GREEN + plugin.getBuild());
-        pre.add(ChatStyle.AQUA + "Built On: " + ChatStyle.GREEN + plugin.getBuildTime());
-        pre.add(ChatStyle.AQUA + "Developer(s): " + ChatStyle.GREEN + plugin.getDevelopers());
-        pre.add(ChatStyle.AQUA + "Website: " + ChatStyle.GREEN + plugin.getWikiURL());
-        pre.add(ChatStyle.AQUA + "Issues: " + ChatStyle.GREEN + plugin.getIssuesURL());
-
-        // Next line should always remain at the end of the About
-        pre.add(center(String.format(copyIllusions, plugin.getCopyYear())));
-        about = Collections.unmodifiableList(pre);
+        super(plugin);
     }
 
-    protected final String center(String toCenter) {
-        String strColorless = toCenter.replaceAll("\u00A7[A-FK-NRa-fk-nr0-9]", "");
-        return StringUtils.padCharLeft(toCenter, (int) (Math.floor(63 - strColorless.length()) / 2), ' ');
+    protected final void sendInformation(CommandSource source) {
+        for (String msg : about) {
+            if (msg.equals("$VERSION_CHECK$")) {
+                VersionChecker vc = plugin.getVersionChecker();
+                Boolean isLatest = vc.isLatest();
+                if (isLatest == null) {
+                    source.sendMessage(center(ChatStyle.DARK_GRAY + "VersionCheckerError: " + vc.getErrorMessage()));
+                }
+                else if (!isLatest) {
+                    source.sendMessage(center(ChatStyle.DARK_GRAY + vc.getUpdateAvailibleMessage()));
+                }
+                else {
+                    source.sendMessage(center(ChatStyle.GREEN + "Latest Version Installed"));
+                }
+
+                messageInject(source);
+            }
+            else {
+                source.sendMessage(msg);
+            }
+        }
     }
 
-    protected final void versionCheck(CommandSource source) {
-        VersionChecker vc = plugin.getVersionChecker();
-        Boolean isLatest = vc.isLatest();
-        if (isLatest == null) {
-            source.sendMessage(center(ChatStyle.DARK_GRAY + "VersionCheckerError: " + vc.getErrorMessage()));
-        }
-        else if (!isLatest) {
-            source.sendMessage(center(ChatStyle.DARK_GRAY + vc.getUpdateAvailibleMessage()));
-        }
-        else {
-            source.sendMessage(center(ChatStyle.GREEN + "Latest Version Installed"));
-        }
+    protected void messageInject(CommandSource receiver) {
+        // Implementing plugin can override this to inject messages
+    }
+
+    @Override
+    protected VisualIllusionsSpoutPlugin getPlugin() {
+        return (VisualIllusionsSpoutPlugin) plugin;
     }
 }

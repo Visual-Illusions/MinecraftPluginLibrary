@@ -17,13 +17,13 @@
  */
 package net.visualillusionsent.minecraft.plugin.bukkit;
 
+import net.visualillusionsent.minecraft.plugin.VisualIllusionsPlugin;
+import net.visualillusionsent.utils.JarUtils;
 import net.visualillusionsent.utils.ProgramStatus;
 import net.visualillusionsent.utils.VersionChecker;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.net.URISyntaxException;
-import java.security.CodeSource;
 import java.util.Calendar;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -33,7 +33,7 @@ import java.util.jar.JarFile;
  *
  * @author Jason (darkdiplomat)
  */
-public abstract class VisualIllusionsBukkitPlugin extends JavaPlugin {
+public abstract class VisualIllusionsBukkitPlugin extends JavaPlugin implements VisualIllusionsPlugin {
 
     private final VersionChecker vc;
     private final YamlConfiguration pluginyml;
@@ -41,7 +41,6 @@ public abstract class VisualIllusionsBukkitPlugin extends JavaPlugin {
     public VisualIllusionsBukkitPlugin() {
         this.pluginyml = new YamlConfiguration();
         this.vc = new VersionChecker(getDefinedName(), getDefinedVersion(), getBuild(), getVersionCheckURL(), getStatus(), false);
-
     }
 
     @Override
@@ -86,6 +85,10 @@ public abstract class VisualIllusionsBukkitPlugin extends JavaPlugin {
         catch (Exception ex) {
             return ProgramStatus.UNKNOWN;
         }
+    }
+
+    public final String getVersion() {
+        return getDescription().getVersion();
     }
 
     public final String getBuild() {
@@ -134,14 +137,8 @@ public abstract class VisualIllusionsBukkitPlugin extends JavaPlugin {
         return this.pluginyml;
     }
 
-    private String getJarPath() { // For when the jar isn't SearchIds.jar
-        try {
-            CodeSource codeSource = this.getClass().getProtectionDomain().getCodeSource();
-            return codeSource.getLocation().toURI().getPath();
-        }
-        catch (URISyntaxException ex) {
-        }
-        return "plugins/SearchIds.jar";
+    private String getJarPath() {
+        return JarUtils.getJarPath(getClass());
     }
 
     // Bukkit is late to define these properties so we grab them directly from our plugin.yml instance
