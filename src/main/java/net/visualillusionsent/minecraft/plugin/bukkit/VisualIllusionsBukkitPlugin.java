@@ -44,6 +44,14 @@ public abstract class VisualIllusionsBukkitPlugin extends JavaPlugin implements 
 
     public VisualIllusionsBukkitPlugin() {
         this.pluginyml = new YamlConfiguration();
+        try {
+            JarFile jfile = new JarFile(getJarPath());
+            JarEntry pyml = jfile.getJarEntry("plugin.yml");
+            pluginyml.load(jfile.getInputStream(pyml));
+        }
+        catch (Exception ex) {
+            Bukkit.getLogger().warning("Failed to read Visual Illusions Information from plugin.yml");
+        }
         this.debug = Boolean.valueOf(System.getProperty("debug.".concat(getDefinedName().toLowerCase()), "false"));
         this.vc = new VersionChecker(getDefinedName(), getMajorMinor(), getRevision(), getVersionCheckURL(), getStatus(), false);
     }
@@ -62,8 +70,9 @@ public abstract class VisualIllusionsBukkitPlugin extends JavaPlugin implements 
     @Override
     public final String getMajorMinor() {
         if (majorMinor == null) {
-            String versionDefined = getDefinedVersion();
-            majorMinor = versionDefined.substring(0, versionDefined.lastIndexOf('.'));
+            String full = getDefinedVersion();
+            Bukkit.getLogger().info(getDefinedName() + " - Debug Version: " + full + " ");
+            majorMinor = full.substring(0, full.lastIndexOf('.'));
         }
         return majorMinor;
     }
@@ -71,8 +80,8 @@ public abstract class VisualIllusionsBukkitPlugin extends JavaPlugin implements 
     @Override
     public final String getRevision() {
         if (revision == null) {
-            String versionDefined = getDefinedVersion();
-            revision = versionDefined.substring(versionDefined.lastIndexOf('.') + 1);
+            String full = getDefinedVersion();
+            revision = full.substring(full.lastIndexOf('.') + 1);
         }
         return revision;
     }
@@ -113,7 +122,7 @@ public abstract class VisualIllusionsBukkitPlugin extends JavaPlugin implements 
     }
 
     private String getVersionCheckURL() {
-        return getPluginYML().getString("version.check.url", "missing.url");
+        return getPluginYML().getString("check.url", "missing.url");
     }
 
     @Override
@@ -127,16 +136,6 @@ public abstract class VisualIllusionsBukkitPlugin extends JavaPlugin implements 
     }
 
     private YamlConfiguration getPluginYML() {
-        if (!pluginyml.contains("name")) {
-            try {
-                JarFile jfile = new JarFile(getJarPath());
-                JarEntry pyml = jfile.getJarEntry("plugin.yml");
-                pluginyml.load(jfile.getInputStream(pyml));
-            }
-            catch (Exception ex) {
-                getLogger().warning("Failed to read Visual Illusions Information from plugin.yml");
-            }
-        }
         return this.pluginyml;
     }
 
@@ -146,7 +145,7 @@ public abstract class VisualIllusionsBukkitPlugin extends JavaPlugin implements 
 
     // Bukkit is late to define these properties so we grab them directly from our plugin.yml instance
     private String getDefinedName() {
-        return getPluginYML().getString("name", "UnknownVIPlugin");
+        return getPluginYML().getString("name", "UnknownVIBukkitPlugin");
     }
 
     private String getDefinedVersion() {
