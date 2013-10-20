@@ -22,6 +22,7 @@ import net.visualillusionsent.minecraft.plugin.VisualIllusionsPlugin;
 import net.visualillusionsent.utils.JarUtils;
 import net.visualillusionsent.utils.ProgramStatus;
 import net.visualillusionsent.utils.VersionChecker;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -38,10 +39,13 @@ public abstract class VisualIllusionsBukkitPlugin extends JavaPlugin implements 
 
     private final VersionChecker vc;
     private final YamlConfiguration pluginyml;
+    private String majorMinor, revision;
+    protected final boolean debug;
 
     public VisualIllusionsBukkitPlugin() {
         this.pluginyml = new YamlConfiguration();
-        this.vc = new VersionChecker(getDefinedName(), getDefinedVersion(), getBuild(), getVersionCheckURL(), getStatus(), false);
+        this.debug = Boolean.valueOf(System.getProperty("debug.".concat(getDefinedName().toLowerCase()), "false"));
+        this.vc = new VersionChecker(getDefinedName(), getMajorMinor(), getRevision(), getVersionCheckURL(), getStatus(), false);
     }
 
     @Override
@@ -53,6 +57,24 @@ public abstract class VisualIllusionsBukkitPlugin extends JavaPlugin implements 
     @Override
     public final String getVersion() {
         return getDescription().getVersion();
+    }
+
+    @Override
+    public final String getMajorMinor() {
+        if (majorMinor == null) {
+            String versionDefined = getDefinedVersion();
+            majorMinor = versionDefined.substring(0, versionDefined.lastIndexOf('.'));
+        }
+        return majorMinor;
+    }
+
+    @Override
+    public final String getRevision() {
+        if (revision == null) {
+            String versionDefined = getDefinedVersion();
+            revision = versionDefined.substring(versionDefined.lastIndexOf('.') + 1);
+        }
+        return revision;
     }
 
     @Override
@@ -124,11 +146,29 @@ public abstract class VisualIllusionsBukkitPlugin extends JavaPlugin implements 
 
     // Bukkit is late to define these properties so we grab them directly from our plugin.yml instance
     private String getDefinedName() {
-        return getPluginYML().getString("name");
+        return getPluginYML().getString("name", "UnknownVIPlugin");
     }
 
     private String getDefinedVersion() {
-        return getPluginYML().getString("version");
+        return getPluginYML().getString("version", "0.0.0");
     }
     //
+
+    /** Terminate plugin with out causing a big scene */
+    protected final void die() {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(this, new SoftDisable(this));
+    }
+
+    private class SoftDisable implements Runnable {
+
+        private final VisualIllusionsBukkitPlugin plugin;
+
+        SoftDisable(VisualIllusionsBukkitPlugin plugin) {
+            this.plugin = plugin;
+        }
+
+        public final void run() {
+            Bukkit.getPluginManager().disablePlugin(plugin);
+        }
+    }
 }

@@ -32,7 +32,18 @@ public class SpoutMessageReceiver implements ModMessageReceiver {
         this.receiver = receiver;
     }
 
+    @Override
     public final void message(String message) {
         receiver.sendMessage(message);
+    }
+
+    @Override
+    public final String getName() {
+        return receiver.getName();
+    }
+
+    @Override
+    public final CommandSource unwrap() {
+        return receiver;
     }
 }

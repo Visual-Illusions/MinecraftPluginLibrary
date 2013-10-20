@@ -37,4 +37,13 @@ public class BukkitMessageReciever implements ModMessageReceiver {
         receiver.sendMessage(message);
     }
 
+    @Override
+    public final String getName() {
+        return receiver.getName();
+    }
+
+    @Override
+    public final CommandSender unwrap() {
+        return receiver;
+    }
 }

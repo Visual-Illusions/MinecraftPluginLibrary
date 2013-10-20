@@ -42,13 +42,18 @@ public final class VisualIllusionsMinecraftPlugin {
 
     public static final void checkVersion(VisualIllusionsPlugin plugin) {
         VersionChecker vc = plugin.getVersionChecker();
-        Boolean isLatest = vc.isLatest();
-        if (isLatest == null) {
-            plugin.getPluginLogger().warning("VersionCheckerError: " + vc.getErrorMessage());
+        if (vc != null) {
+            Boolean isLatest = vc.isLatest();
+            if (isLatest == null) {
+                plugin.getPluginLogger().warning("VersionCheckerError: " + vc.getErrorMessage());
+            }
+            else if (!isLatest) {
+                plugin.getPluginLogger().warning(vc.getUpdateAvailibleMessage());
+                plugin.getPluginLogger().warning(String.format("You can view update info @ %s#ChangeLog", plugin.getWikiURL()));
+            }
         }
-        else if (!isLatest) {
-            plugin.getPluginLogger().warning(vc.getUpdateAvailibleMessage());
-            plugin.getPluginLogger().warning(String.format("You can view update info @ %s#ChangeLog", plugin.getWikiURL()));
+        else {
+            plugin.getPluginLogger().warning("No VersionChecker instance available.");
         }
     }
 }

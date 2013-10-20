@@ -18,9 +18,15 @@
 package net.visualillusionsent.minecraft.plugin;
 
 /**
+ * Mod Message Receiver
  *
+ * @author Jason (darkdiplomat)
  */
 public interface ModMessageReceiver {
 
     void message(String message);
+
+    String getName();
+
+    <T> T unwrap();
 }

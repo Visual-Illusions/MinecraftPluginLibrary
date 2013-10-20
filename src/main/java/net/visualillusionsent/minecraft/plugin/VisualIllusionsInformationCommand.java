@@ -74,19 +74,15 @@ public abstract class VisualIllusionsInformationCommand {
             if (msg.equals("$VERSION_CHECK$")) {
                 VersionChecker vc = plugin.getVersionChecker();
                 Boolean isLatest = vc.isLatest();
-                if (isLatest == null) {
-                    receiver.message(center("§8VersionCheckerError: " + vc.getErrorMessage()));
-                }
-                else if (!isLatest) {
-                    receiver.message(center("§8".concat(vc.getUpdateAvailibleMessage())));
+                if (isLatest == null) { // if null, something went wrong
+                    receiver.message(center("§8Error: ".concat(vc.getErrorMessage())));
                 }
                 else {
-                    receiver.message(center("§ALatest Version Installed"));
+                    String prefix = isLatest ? "§A" : "§8";
+                    receiver.message(center(prefix.concat(vc.getUpdateAvailibleMessage())));
                 }
-
-                for (String line : messageInject()) {
-                    receiver.message(line);
-                }
+                // Pass off the receiver for message injections
+                messageInject(receiver);
             }
             else {
                 receiver.message(msg);
@@ -99,7 +95,8 @@ public abstract class VisualIllusionsInformationCommand {
      *
      * @return the injected message lines
      */
-    protected abstract String[] messageInject();
+    protected void messageInject(ModMessageReceiver receiver) {
+    }
 
     /**
      * Gets the Visual Illusions Plugin instance

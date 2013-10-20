@@ -37,12 +37,6 @@ public abstract class VisualIllusionsCanaryPluginInformationCommand extends Visu
     }
 
     @Override
-    protected String[] messageInject() {
-        // Implementing plugin can override this to inject messages
-        return new String[0];
-    }
-
-    @Override
     protected VisualIllusionsCanaryPlugin getPlugin() {
         return (VisualIllusionsCanaryPlugin) plugin;
     }

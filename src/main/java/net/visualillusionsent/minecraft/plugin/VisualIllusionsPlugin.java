@@ -28,10 +28,18 @@ import java.util.logging.Logger;
  * @author Jason (darkdiplomat)
  */
 public interface VisualIllusionsPlugin {
+    /*
+      Visual Illusions Dev Notes:
+      As of 20 October 2013, versions are now Major.Minor.Revision for all Visual Illusions Plugins
+     */
 
     String getName();
 
     String getVersion();
+
+    String getMajorMinor();
+
+    String getRevision();
 
     String getBuild();
 

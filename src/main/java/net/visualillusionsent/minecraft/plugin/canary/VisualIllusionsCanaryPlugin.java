@@ -33,9 +33,12 @@ import java.util.Calendar;
 public abstract class VisualIllusionsCanaryPlugin extends Plugin implements VisualIllusionsPlugin {
 
     private final VersionChecker vc;
+    private String majorMinor, revision;
+    protected final boolean debug;
 
     public VisualIllusionsCanaryPlugin() {
-        this.vc = new VersionChecker(getName(), getVersion(), getBuild(), getVersionCheckURL(), getStatus(), false);
+        this.debug = Boolean.valueOf(System.getProperty("debug.".concat(getName().toLowerCase()), "false"));
+        this.vc = new VersionChecker(getName(), getVersion(), getBuild(), getVersionCheckURL(), getStatus(), true);
     }
 
     @Override
@@ -43,6 +46,22 @@ public abstract class VisualIllusionsCanaryPlugin extends Plugin implements Visu
         VisualIllusionsMinecraftPlugin.checkVersion(this);
         VisualIllusionsMinecraftPlugin.checkStatus(this);
         return true;
+    }
+
+    public final String getMajorMinor() {
+        if (majorMinor == null) {
+            String full = getVersion();
+            majorMinor = full.substring(0, full.lastIndexOf('.'));
+        }
+        return majorMinor;
+    }
+
+    public final String getRevision() {
+        if (revision == null) {
+            String full = getVersion();
+            revision = full.substring(full.lastIndexOf('.') + 1);
+        }
+        return revision;
     }
 
     @Override
@@ -90,7 +109,7 @@ public abstract class VisualIllusionsCanaryPlugin extends Plugin implements Visu
         }
     }
 
-    public final String getVersionCheckURL() {
+    private final String getVersionCheckURL() {
         return getCanaryInf().getString("version.check.url", "missing.url");
     }
 }

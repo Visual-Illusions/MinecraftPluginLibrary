@@ -37,12 +37,6 @@ public abstract class VisualIllusionsBukkitPluginInformationCommand extends Visu
     }
 
     @Override
-    protected String[] messageInject() {
-        // Implementing plugin can override this to inject messages
-        return new String[0];
-    }
-
-    @Override
     protected VisualIllusionsBukkitPlugin getPlugin() {
         return (VisualIllusionsBukkitPlugin) plugin;
     }

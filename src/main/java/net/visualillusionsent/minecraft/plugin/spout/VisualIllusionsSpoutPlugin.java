@@ -38,6 +38,7 @@ public abstract class VisualIllusionsSpoutPlugin extends Plugin implements Visua
 
     private VersionChecker vc;
     private YamlConfiguration pluginyml;
+    private final boolean debug = Boolean.valueOf(System.getProperty("debug.".concat(getName().toLowerCase()), "false"));
 
     @Override
     public void onEnable() {
@@ -91,7 +92,7 @@ public abstract class VisualIllusionsSpoutPlugin extends Plugin implements Visua
         }
     }
 
-    public final String getVersionCheckURL() {
+    private final String getVersionCheckURL() {
         return getPluginYML().getChild("version.check.url").getString("missing.url");
     }
 

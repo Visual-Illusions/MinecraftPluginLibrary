@@ -36,12 +36,6 @@ public abstract class VisualIllusionsSpoutPluginInformationCommand extends Visua
     }
 
     @Override
-    protected String[] messageInject() {
-        // Implementing plugin can override this to inject messages
-        return new String[0];
-    }
-
-    @Override
     protected VisualIllusionsSpoutPlugin getPlugin() {
         return (VisualIllusionsSpoutPlugin) plugin;
     }

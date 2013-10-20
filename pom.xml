@@ -6,12 +6,12 @@
     <groupId>net.visualillusionsent</groupId>
     <artifactId>vimcplugin</artifactId>
     <name>VIMCPlugin</name>
-    <!-- Change minor version if library functionality changes, update number if a dependency version has changed -->
-    <version>1.1u2-SNAPSHOT</version>
+    <!-- Change minor version if library functionality changes, micro if a dependency version has changed -->
+    <version>1.0.0-SNAPSHOT</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <viutils.version>1.2.0</viutils.version>
-        <canary.version>1.0-RC-2</canary.version>
+        <canary.version>1.0-RC-3-SNAPSHOT</canary.version>
         <bukkit.version>1.6.2-R1.0</bukkit.version>
         <spout.version>1.0.0-SNAPSHOT</spout.version>
         <spout.vanilla.version>1.6.4-SNAPSHOT</spout.vanilla.version>
@@ -79,17 +79,31 @@
             <id>repo-bukkit</id>
             <name>Bukkit Public Repository</name>
             <url>http://repo.bukkit.org/content/groups/public</url>
+            <releases>
+                <updatePolicy>always</updatePolicy>
+            </releases>
+            <snapshots>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
         </repository>
         <!-- Spout/Vanilla -->
         <repository>
             <id>sonatype-nexus-releases</id>
             <url>https://oss.sonatype.org/content/repositories/releases</url>
+            <releases>
+                <updatePolicy>always</updatePolicy>
+            </releases>
+            <snapshots>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
         </repository>
         <repository>
             <id>sonatype-nexus-snapshots</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <releases>
+                <updatePolicy>always</updatePolicy>
+            </releases>
             <snapshots>
-                <enabled>true</enabled>
                 <updatePolicy>always</updatePolicy>
             </snapshots>
         </repository>
