@@ -149,6 +149,9 @@ public enum ChatFormat {
     }
 
     public static String formatString(String str, String marker) {
+        if (marker.matches("^.*?(\\$|\\^|\\.|\\*|\\?|\\+).*$")) { // Clean the string of anything that could disrupt the regex
+            marker = marker.replaceAll("(\\$|\\^|\\.|\\*|\\?|\\+)", "\\\\$1");
+        }
         return str.replaceAll("(?i)" + marker + "([a-fk-nr0-9])", MARKER.concat("$1"));
     }
 }

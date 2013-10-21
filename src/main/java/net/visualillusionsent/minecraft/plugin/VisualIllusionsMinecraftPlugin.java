@@ -45,7 +45,7 @@ public final class VisualIllusionsMinecraftPlugin {
         if (vc != null) {
             Boolean isLatest = vc.isLatest();
             if (isLatest == null) {
-                plugin.getPluginLogger().warning("VersionCheckerError: " + vc.getErrorMessage());
+                plugin.getPluginLogger().warning("Error: " + vc.getErrorMessage());
             }
             else if (!isLatest) {
                 plugin.getPluginLogger().warning(vc.getUpdateAvailibleMessage());
