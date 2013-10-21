@@ -18,7 +18,6 @@
 package net.visualillusionsent.minecraft.plugin;
 
 import net.visualillusionsent.utils.VersionChecker;
-import org.bukkit.Bukkit;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -26,6 +25,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.util.logging.Logger;
 
 /** @author Jason (darkdiplomat) */
 public final class VisualIllusionsMinecraftPlugin {
@@ -65,18 +65,18 @@ public final class VisualIllusionsMinecraftPlugin {
         }
     }
 
-    public static void getAPI(String pluginName, String api, String version, URL url) {
-        String api_location = String.format("lib/%s-%s.jar", api, version);
-        File lib = new File(api_location);
-        if (!lib.exists()) {
+    public static void getLibrary(String pluginName, String lib, String version, URL site, Logger logger) {
+        String lib_location = String.format("lib/%s-%s.jar", lib, version);
+        File library = new File(lib_location);
+        if (!library.exists()) {
             try {
-                URLConnection conn = url.openConnection();
+                URLConnection conn = site.openConnection();
                 ReadableByteChannel rbc = Channels.newChannel(conn.getInputStream());
                 FileOutputStream fos = new FileOutputStream(lib);
                 fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
             }
             catch (Exception ex) {
-                Bukkit.getLogger().severe(String.format("[%s] Failed to download %s %s", pluginName, api, version));
+                logger.severe(String.format("[%s] Failed to download Library: %s %s", pluginName, lib, version));
             }
         }
     }
