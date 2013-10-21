@@ -18,11 +18,19 @@
 package net.visualillusionsent.minecraft.plugin;
 
 import net.visualillusionsent.utils.VersionChecker;
+import org.bukkit.Bukkit;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 
 /** @author Jason (darkdiplomat) */
 public final class VisualIllusionsMinecraftPlugin {
 
-    public static final void checkStatus(VisualIllusionsPlugin plugin) {
+    public static void checkStatus(VisualIllusionsPlugin plugin) {
         String statusReport = "%s has declared itself as '%s' build. %s";
         switch (plugin.getStatus()) {
             case UNKNOWN:
@@ -40,20 +48,36 @@ public final class VisualIllusionsMinecraftPlugin {
         }
     }
 
-    public static final void checkVersion(VisualIllusionsPlugin plugin) {
+    public static void checkVersion(VisualIllusionsPlugin plugin) {
         VersionChecker vc = plugin.getVersionChecker();
         if (vc != null) {
             Boolean isLatest = vc.isLatest();
             if (isLatest == null) {
-                plugin.getPluginLogger().warning("Error: " + vc.getErrorMessage());
+                plugin.getPluginLogger().warning("Version Checker Error: " + vc.getErrorMessage());
             }
             else if (!isLatest) {
-                plugin.getPluginLogger().warning(vc.getUpdateAvailibleMessage());
+                plugin.getPluginLogger().warning(vc.getUpdateAvailableMessage());
                 plugin.getPluginLogger().warning(String.format("You can view update info @ %s#ChangeLog", plugin.getWikiURL()));
             }
         }
         else {
             plugin.getPluginLogger().warning("No VersionChecker instance available.");
+        }
+    }
+
+    public static void getAPI(String pluginName, String api, String version, URL url) {
+        String api_location = String.format("lib/%s-%s.jar", api, version);
+        File lib = new File(api_location);
+        if (!lib.exists()) {
+            try {
+                URLConnection conn = url.openConnection();
+                ReadableByteChannel rbc = Channels.newChannel(conn.getInputStream());
+                FileOutputStream fos = new FileOutputStream(lib);
+                fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+            }
+            catch (Exception ex) {
+                Bukkit.getLogger().severe(String.format("[%s] Failed to download %s %s", pluginName, api, version));
+            }
         }
     }
 }
