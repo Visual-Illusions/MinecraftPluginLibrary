@@ -148,10 +148,18 @@ public enum ChatFormat {
         return str.replaceAll("(?i)\u00A7[a-fk-nr0-9]", "");
     }
 
+    /**
+     * Formats a given {@link String} by replacing the specified marker with the Section Symbol (§)
+     *
+     * @param str
+     *         the {@link String} to format
+     * @param marker
+     *         the specified marker to replace
+     *
+     * @return the formatted {@link String}
+     */
     public static String formatString(String str, String marker) {
-        if (marker.matches("^.*?(\\$|\\^|\\.|\\*|\\?|\\+).*$")) { // Clean the string of anything that could disrupt the regex
-            marker = marker.replaceAll("(\\$|\\^|\\.|\\*|\\?|\\+)", "\\\\$1");
-        }
+        marker = marker.replaceAll("(\\$|\\^|\\.|\\*|\\?|\\+)", "\\\\$1");// Clean the string of anything that could disrupt the regex
         return str.replaceAll("(?i)" + marker + "([a-fk-nr0-9])", MARKER.concat("$1"));
     }
 }

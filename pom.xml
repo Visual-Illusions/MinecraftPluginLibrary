@@ -10,7 +10,7 @@
     <version>1.0.0-SNAPSHOT</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <viutils.version>1.2.0</viutils.version>
+        <viutils.version>1.2.1</viutils.version>
         <canary.version>1.0-RC-3-SNAPSHOT</canary.version>
         <bukkit.version>1.6.2-R1.0</bukkit.version>
         <spout.version>1.0.0-SNAPSHOT</spout.version>
