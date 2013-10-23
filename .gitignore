@@ -8,3 +8,4 @@
 *.iml
 pom.xml.bak
 pom.xml.dev.bak
+/src/test/java/Test.java
