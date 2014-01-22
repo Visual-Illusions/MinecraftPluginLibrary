@@ -40,7 +40,7 @@ public abstract class VisualIllusionsCanaryPlugin extends Plugin implements Visu
 
     public VisualIllusionsCanaryPlugin() {
         this.debug = Boolean.valueOf(System.getProperty("debug.".concat(getName().toLowerCase()), "false"));
-        this.pChecker = new ProgramChecker(getName(), getVersionArray(), getVersionCheckURL(), getStatus());
+        this.pChecker = new ProgramChecker(getName(), getVersionArray(), getStatusURL(), getStatus());
         this.logger = new WrappedLogger(getLogman());
     }
 
@@ -53,7 +53,7 @@ public abstract class VisualIllusionsCanaryPlugin extends Plugin implements Visu
 
     @Override
     public final String getBuild() {
-        return getCanaryInf().getString("build.number", "0");
+        return getCanaryInf().getString("build.number", "-1");
     }
 
     @Override
@@ -88,12 +88,7 @@ public abstract class VisualIllusionsCanaryPlugin extends Plugin implements Visu
 
     @Override
     public final ProgramStatus getStatus() {
-        try {
-            return ProgramStatus.fromString(getCanaryInf().getString("program.status"));
-        }
-        catch (Exception ex) {
-            return ProgramStatus.UNKNOWN;
-        }
+        return getVersion().contains("-SNAPSHOT") ? ProgramStatus.SNAPSHOT : ProgramStatus.STABLE;
     }
 
     @Override
@@ -106,9 +101,9 @@ public abstract class VisualIllusionsCanaryPlugin extends Plugin implements Visu
         return mmr;
     }
 
-    private final URL getVersionCheckURL() {
+    private final URL getStatusURL() {
         try {
-            return new URL(getCanaryInf().getString("check.url", "missing.url"));
+            return new URL(getCanaryInf().getString("status.url", "missing.url"));
         }
         catch (MalformedURLException e) {
             return null;

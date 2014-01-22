@@ -39,12 +39,26 @@ import java.util.jar.JarFile;
 public abstract class VisualIllusionsSpoutPlugin extends Plugin implements VisualIllusionsPlugin {
 
     private ProgramChecker pChecker;
-    private YamlConfiguration pluginyml;
+    private final YamlConfiguration pluginyml;
     private final boolean debug = Boolean.valueOf(System.getProperty("debug.".concat(getName().toLowerCase()), "false"));
+
+    public VisualIllusionsSpoutPlugin() {
+        YamlConfiguration temp = null;
+        try {
+            JarFile jfile = new JarFile(getJarPath());
+            JarEntry pyml = jfile.getJarEntry("properties.yml");
+            temp = new YamlConfiguration(jfile.getInputStream(pyml));
+            temp.load();
+        }
+        catch (Exception ex) {
+            throw new RuntimeException("Failed to read Visual Illusions Information from plugin.yml");
+        }
+        this.pluginyml = temp;
+        this.pChecker = new ProgramChecker(getName(), getVersionArray(), getStatusURL(), getStatus());
+    }
 
     @Override
     public void onEnable() {
-        this.pChecker = new ProgramChecker(getName(), getVersionArray(), getVersionCheckURL(), getStatus());
         VisualIllusionsMinecraftPlugin.checkVersion(this);
         VisualIllusionsMinecraftPlugin.checkStatus(this);
     }
@@ -86,12 +100,7 @@ public abstract class VisualIllusionsSpoutPlugin extends Plugin implements Visua
 
     @Override
     public final ProgramStatus getStatus() {
-        try {
-            return ProgramStatus.valueOf(getPluginYML().getChild("program.status").getString().toUpperCase());
-        }
-        catch (Exception ex) {
-            return ProgramStatus.UNKNOWN;
-        }
+        return getDefinedVersion().contains("-SNAPSHOT") ? ProgramStatus.SNAPSHOT : ProgramStatus.STABLE;
     }
 
     @Override
@@ -104,27 +113,26 @@ public abstract class VisualIllusionsSpoutPlugin extends Plugin implements Visua
         return mmr;
     }
 
-    private URL getVersionCheckURL() {
+    private URL getStatusURL() {
         try {
-            return new URL(getPluginYML().getChild("version.check.url").getString("missing.url"));
+            return new URL(getPluginYML().getChild("status.url").getString("missing.url"));
         }
         catch (MalformedURLException e) {
             return null;
         }
     }
 
+    // Spout is late to define these properties so we grab them directly from our properties.yml instance
+    private String getDefinedName() {
+        return getPluginYML().getChild("name").getString("UnknownVISpoutPlugin");
+    }
+
+    private String getDefinedVersion() {
+        return getPluginYML().getChild("version").getString("0.0.0");
+    }
+    //
+
     private YamlConfiguration getPluginYML() {
-        if (pluginyml == null) {
-            try {
-                JarFile jfile = new JarFile(getJarPath());
-                JarEntry pyml = jfile.getJarEntry("properties.yml");
-                pluginyml = new YamlConfiguration(jfile.getInputStream(pyml));
-                pluginyml.load();
-            }
-            catch (Exception ex) {
-                getLogger().warning("Failed to read Visual Illusions Information from properties.yml");
-            }
-        }
         return this.pluginyml;
     }
 

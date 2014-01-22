@@ -55,7 +55,7 @@ public abstract class VisualIllusionsBukkitPlugin extends JavaPlugin implements 
             Bukkit.getLogger().warning("Failed to read Visual Illusions Information from plugin.yml");
         }
         this.debug = Boolean.valueOf(System.getProperty("debug.".concat(getDefinedName().toLowerCase()), "false"));
-        this.pChecker = new ProgramChecker(getName(), getVersionArray(), getVersionCheckURL(), getStatus());
+        this.pChecker = new ProgramChecker(getName(), getVersionArray(), getStatusURL(), getStatus());
     }
 
     @Override
@@ -104,9 +104,9 @@ public abstract class VisualIllusionsBukkitPlugin extends JavaPlugin implements 
         return getPluginYML().getString("copyright.years", String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
     }
 
-    private URL getVersionCheckURL() {
+    private URL getStatusURL() {
         try {
-            return new URL(getPluginYML().getString("check.url", "missing.url"));
+            return new URL(getPluginYML().getString("status.url", "missing.url"));
         }
         catch (MalformedURLException e) {
             return null;
@@ -115,18 +115,13 @@ public abstract class VisualIllusionsBukkitPlugin extends JavaPlugin implements 
 
     @Override
     public final ProgramStatus getStatus() {
-        try {
-            return ProgramStatus.valueOf(getPluginYML().getString("program.status").toUpperCase());
-        }
-        catch (Exception ex) {
-            return ProgramStatus.UNKNOWN;
-        }
+        return getDefinedVersion().contains("-SNAPSHOT") ? ProgramStatus.SNAPSHOT : ProgramStatus.STABLE;
     }
 
     @Override
     public final long[] getVersionArray() {
         long[] mmr = new long[3];
-        String[] vbreakdown = getDefinedVersion().split("\\.");
+        String[] vbreakdown = getDefinedVersion().replace("-SNAPSHOT", "").split("\\.");
         mmr[0] = Long.valueOf(vbreakdown[0]);
         mmr[1] = Long.valueOf(vbreakdown[1]);
         mmr[2] = Long.valueOf(vbreakdown[2]);
