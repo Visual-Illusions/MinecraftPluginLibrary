@@ -7,12 +7,12 @@
     <artifactId>vimcplugin</artifactId>
     <name>VIMCPlugin</name>
     <!-- Change minor version if library functionality changes, revision if a dependency version has changed -->
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.1.0-SNAPSHOT</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <viutils.version>1.2.1</viutils.version>
-        <canary.version>1.0-RC-3</canary.version>
-        <bukkit.version>1.6.2-R1.0</bukkit.version>
+        <viutils.version>1.3.0</viutils.version>
+        <canary.version>1.0-RC-4-SNAPSHOT</canary.version>
+        <bukkit.version>1.7.2-R0.2</bukkit.version>
         <spout.version>1.0.0-SNAPSHOT</spout.version>
         <spout.vanilla.version>1.6.4-SNAPSHOT</spout.vanilla.version>
     </properties>
@@ -25,14 +25,18 @@
             <name>GNU Lesser General Public License v3</name>
             <url>http://www.gnu.org/licenses/lgpl.html</url>
             <comments>
-                Visual Illusions Minecraft Plugin Library is free software: you can redistribute it and/or modify
-                it under the terms of the GNU Lesser General Public License as published by
+                Visual Illusions Minecraft Plugin Library is free software: you
+                can redistribute it and/or modify
+                it under the terms of the GNU Lesser General Public License as
+                published by
                 the Free Software Foundation, either version 3 of the License,
                 or (at your option) any later version.
 
-                Visual Illusions Minecraft Plugin Library is distributed in the hope that it will be useful,
+                Visual Illusions Minecraft Plugin Library is distributed in the
+                hope that it will be useful,
                 but WITHOUT ANY WARRANTY;
-                without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+                without even the implied warranty of MERCHANTABILITY or FITNESS
+                FOR A PARTICULAR PURPOSE.
                 See the GNU Lesser General Public License for more details.
             </comments>
         </license>
@@ -45,7 +49,9 @@
     <scm>
         <url>https://github.com/Visual-Illusions/VIMinecraftPlugin</url>
         <connection>GitHub</connection>
-        <developerConnection>scm:git:git@github.com:Visual-Illusions/VIMinecraftPlugin.git</developerConnection>
+        <developerConnection>
+            scm:git:git@github.com:Visual-Illusions/VIMinecraftPlugin.git
+        </developerConnection>
     </scm>
     <issueManagement>
         <url>http://github.com/Visual-Illusions/VIMinecraftPlugin/issues</url>
@@ -57,16 +63,16 @@
     </ciManagement>
     <distributionManagement>
         <repository>
-            <id>vi-repo</id>
-            <url>ftp://repo.visualillusionsent.net/</url>
+            <id>vi-repo2</id>
+            <url>http://repo2.visualillusionsent.net/repository/public/</url>
         </repository>
     </distributionManagement>
     <repositories>
         <!-- VIUtils & Canary -->
         <repository>
-            <id>vi-repo</id>
+            <id>vi-repo2</id>
             <name>Visual Illusions Repository</name>
-            <url>http://repo.visualillusionsent.net/</url>
+            <url>http://repo2.visualillusionsent.net/</url>
             <releases>
                 <updatePolicy>always</updatePolicy>
             </releases>
@@ -147,29 +153,52 @@
         <dependency>
             <groupId>net.canarymod</groupId>
             <artifactId>CanaryLib</artifactId>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.spout</groupId>
             <artifactId>spout-api</artifactId>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.spout</groupId>
             <artifactId>vanilla</artifactId>
+            <scope>compile</scope>
         </dependency>
         <!-- Mods End -->
         <!-- Libraries -->
         <dependency>
             <groupId>net.visualillusionsent</groupId>
             <artifactId>viutils</artifactId>
+            <scope>compile</scope>
         </dependency>
         <!-- Libraries End -->
     </dependencies>
     <build>
         <plugins>
+            <!-- Timestamp for year -->
+            <plugin>
+                <groupId>com.keyboardsamurais.maven</groupId>
+                <artifactId>maven-timestamp-plugin</artifactId>
+                <version>1.0</version>
+                <configuration>
+                    <propertyName>current.year</propertyName>
+                    <timestampPattern>yyyy</timestampPattern>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>pre-clean</phase>
+                        <goals>
+                            <goal>create</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <!-- License Header -->
             <plugin>
                 <groupId>com.mycila</groupId>
@@ -191,9 +220,10 @@
                     </mapping>
                     <properties>
                         <name>${project.name}</name>
-                        <years>${project.inceptionYear}</years>
+                        <years>${project.inceptionYear}-${current.year}</years>
                         <gpl.type>GNU Lesser General Public License</gpl.type>
-                        <license.url>http://www.gnu.org/licenses/lgpl.html</license.url>
+                        <license.url>http://www.gnu.org/licenses/lgpl.html
+                        </license.url>
                     </properties>
                     <includes>
                         <include>src/main/java/**</include>
@@ -212,13 +242,5 @@
                 </configuration>
             </plugin>
         </plugins>
-        <extensions>
-            <!-- FTP Extension to upload to repo.visualillusionsent.net -->
-            <extension>
-                <groupId>org.apache.maven.wagon</groupId>
-                <artifactId>wagon-ftp</artifactId>
-                <version>2.5</version>
-            </extension>
-        </extensions>
     </build>
 </project>

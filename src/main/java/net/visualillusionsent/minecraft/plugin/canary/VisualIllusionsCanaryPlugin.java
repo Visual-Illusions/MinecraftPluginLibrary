@@ -1,7 +1,7 @@
 /*
  * This file is part of VIMCPlugin.
  *
- * Copyright © 2013 Visual Illusions Entertainment
+ * Copyright © 2013-2014 Visual Illusions Entertainment
  *
  * VIMCPlugin is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,9 +20,11 @@ package net.visualillusionsent.minecraft.plugin.canary;
 import net.canarymod.plugin.Plugin;
 import net.visualillusionsent.minecraft.plugin.VisualIllusionsMinecraftPlugin;
 import net.visualillusionsent.minecraft.plugin.VisualIllusionsPlugin;
+import net.visualillusionsent.utils.ProgramChecker;
 import net.visualillusionsent.utils.ProgramStatus;
-import net.visualillusionsent.utils.VersionChecker;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Calendar;
 
 /**
@@ -32,13 +34,14 @@ import java.util.Calendar;
  */
 public abstract class VisualIllusionsCanaryPlugin extends Plugin implements VisualIllusionsPlugin {
 
-    private final VersionChecker vc;
-    private String majorMinor, revision;
+    private final ProgramChecker pChecker;
     protected final boolean debug;
+    protected final WrappedLogger logger;
 
     public VisualIllusionsCanaryPlugin() {
         this.debug = Boolean.valueOf(System.getProperty("debug.".concat(getName().toLowerCase()), "false"));
-        this.vc = new VersionChecker(getName(), getVersion(), getBuild(), getVersionCheckURL(), getStatus(), true);
+        this.pChecker = new ProgramChecker(getName(), getVersionArray(), getVersionCheckURL(), getStatus());
+        this.logger = new WrappedLogger(getLogman());
     }
 
     @Override
@@ -46,22 +49,6 @@ public abstract class VisualIllusionsCanaryPlugin extends Plugin implements Visu
         VisualIllusionsMinecraftPlugin.checkVersion(this);
         VisualIllusionsMinecraftPlugin.checkStatus(this);
         return true;
-    }
-
-    public final String getMajorMinor() {
-        if (majorMinor == null) {
-            String full = getVersion();
-            majorMinor = full.substring(0, full.lastIndexOf('.'));
-        }
-        return majorMinor;
-    }
-
-    public final String getRevision() {
-        if (revision == null) {
-            String full = getVersion();
-            revision = full.substring(full.lastIndexOf('.') + 1);
-        }
-        return revision;
     }
 
     @Override
@@ -75,8 +62,8 @@ public abstract class VisualIllusionsCanaryPlugin extends Plugin implements Visu
     }
 
     @Override
-    public final VersionChecker getVersionChecker() {
-        return vc;
+    public final ProgramChecker getProgramChecker() {
+        return pChecker;
     }
 
     @Override
@@ -102,14 +89,30 @@ public abstract class VisualIllusionsCanaryPlugin extends Plugin implements Visu
     @Override
     public final ProgramStatus getStatus() {
         try {
-            return ProgramStatus.valueOf(getCanaryInf().getString("program.status").toUpperCase());
+            return ProgramStatus.fromString(getCanaryInf().getString("program.status"));
         }
         catch (Exception ex) {
             return ProgramStatus.UNKNOWN;
         }
     }
 
-    private final String getVersionCheckURL() {
-        return getCanaryInf().getString("check.url", "missing.url");
+    @Override
+    public final long[] getVersionArray() {
+        long[] mmr = new long[3];
+        String[] vbreakdown = getVersion().split("\\.");
+        mmr[0] = Long.valueOf(vbreakdown[0]);
+        mmr[1] = Long.valueOf(vbreakdown[1]);
+        mmr[2] = Long.valueOf(vbreakdown[2]);
+        return mmr;
     }
+
+    private final URL getVersionCheckURL() {
+        try {
+            return new URL(getCanaryInf().getString("check.url", "missing.url"));
+        }
+        catch (MalformedURLException e) {
+            return null;
+        }
+    }
+
 }

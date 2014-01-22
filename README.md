@@ -5,7 +5,7 @@ Base for all Visual Illusions Plugins
 
 License
 ---------
-Copyright © 2013 Visual Illusions Entertainment
+Copyright &copy; 2013-2014 Visual Illusions Entertainment
 
 VIMCPlugin is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by

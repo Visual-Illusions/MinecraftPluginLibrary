@@ -1,7 +1,7 @@
 /*
  * This file is part of VIMCPlugin.
  *
- * Copyright © 2013 Visual Illusions Entertainment
+ * Copyright © 2013-2014 Visual Illusions Entertainment
  *
  * VIMCPlugin is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,8 +17,8 @@
  */
 package net.visualillusionsent.minecraft.plugin;
 
+import net.visualillusionsent.utils.ProgramChecker;
 import net.visualillusionsent.utils.StringUtils;
-import net.visualillusionsent.utils.VersionChecker;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -72,15 +72,19 @@ public abstract class VisualIllusionsInformationCommand {
     protected final void sendInformation(ModMessageReceiver receiver) {
         for (String msg : about) {
             if (msg.equals("$VERSION_CHECK$")) {
-                VersionChecker vc = plugin.getVersionChecker();
-                Boolean isLatest = vc.isLatest();
-                if (isLatest == null) { // if null, something went wrong
-                    receiver.message(center("§8Error: ".concat(vc.getErrorMessage())));
+                ProgramChecker programChecker = plugin.getProgramChecker();
+                ProgramChecker.Status isLatest = programChecker.checkStatus();
+                String prefix = "§4";
+                switch (isLatest) {
+                    case LATEST:
+                        prefix = "§2";
+                        break;
+                    case UPDATE:
+                        prefix = "§6";
+                        break;
                 }
-                else {
-                    String prefix = isLatest ? "§A" : "§8";
-                    receiver.message(center(prefix.concat(vc.getUpdateAvailibleMessage())));
-                }
+                receiver.message(center(prefix.concat(programChecker.getStatusMessage())));
+
                 // Pass off the receiver for message injections
                 messageInject(receiver);
             }

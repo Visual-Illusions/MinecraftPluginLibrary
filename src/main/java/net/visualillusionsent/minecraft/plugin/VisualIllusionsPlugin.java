@@ -1,7 +1,7 @@
 /*
  * This file is part of VIMCPlugin.
  *
- * Copyright © 2013 Visual Illusions Entertainment
+ * Copyright © 2013-2014 Visual Illusions Entertainment
  *
  * VIMCPlugin is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,8 +17,8 @@
  */
 package net.visualillusionsent.minecraft.plugin;
 
+import net.visualillusionsent.utils.ProgramChecker;
 import net.visualillusionsent.utils.ProgramStatus;
-import net.visualillusionsent.utils.VersionChecker;
 
 import java.util.logging.Logger;
 
@@ -37,9 +37,7 @@ public interface VisualIllusionsPlugin {
 
     String getVersion();
 
-    String getMajorMinor();
-
-    String getRevision();
+    long[] getVersionArray();
 
     String getBuild();
 
@@ -53,7 +51,7 @@ public interface VisualIllusionsPlugin {
 
     String getCopyYear();
 
-    VersionChecker getVersionChecker();
+    ProgramChecker getProgramChecker();
 
     ProgramStatus getStatus();
 

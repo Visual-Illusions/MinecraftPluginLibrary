@@ -1,7 +1,7 @@
 /*
  * This file is part of VIMCPlugin.
  *
- * Copyright © 2013 Visual Illusions Entertainment
+ * Copyright © 2013-2014 Visual Illusions Entertainment
  *
  * VIMCPlugin is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,11 +20,13 @@ package net.visualillusionsent.minecraft.plugin.spout;
 import net.visualillusionsent.minecraft.plugin.VisualIllusionsMinecraftPlugin;
 import net.visualillusionsent.minecraft.plugin.VisualIllusionsPlugin;
 import net.visualillusionsent.utils.JarUtils;
+import net.visualillusionsent.utils.ProgramChecker;
 import net.visualillusionsent.utils.ProgramStatus;
-import net.visualillusionsent.utils.VersionChecker;
 import org.spout.api.plugin.Plugin;
 import org.spout.cereal.config.yaml.YamlConfiguration;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Calendar;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -36,13 +38,13 @@ import java.util.jar.JarFile;
  */
 public abstract class VisualIllusionsSpoutPlugin extends Plugin implements VisualIllusionsPlugin {
 
-    private VersionChecker vc;
+    private ProgramChecker pChecker;
     private YamlConfiguration pluginyml;
     private final boolean debug = Boolean.valueOf(System.getProperty("debug.".concat(getName().toLowerCase()), "false"));
 
     @Override
     public void onEnable() {
-        this.vc = new VersionChecker(getName(), getDescription().getVersion(), getBuild(), getVersionCheckURL(), getStatus(), false);
+        this.pChecker = new ProgramChecker(getName(), getVersionArray(), getVersionCheckURL(), getStatus());
         VisualIllusionsMinecraftPlugin.checkVersion(this);
         VisualIllusionsMinecraftPlugin.checkStatus(this);
     }
@@ -58,8 +60,8 @@ public abstract class VisualIllusionsSpoutPlugin extends Plugin implements Visua
     }
 
     @Override
-    public final VersionChecker getVersionChecker() {
-        return vc;
+    public final ProgramChecker getProgramChecker() {
+        return pChecker;
     }
 
     @Override
@@ -92,8 +94,23 @@ public abstract class VisualIllusionsSpoutPlugin extends Plugin implements Visua
         }
     }
 
-    private final String getVersionCheckURL() {
-        return getPluginYML().getChild("version.check.url").getString("missing.url");
+    @Override
+    public final long[] getVersionArray() {
+        long[] mmr = new long[3];
+        String[] vbreakdown = getDescription().getVersion().split("\\.");
+        mmr[0] = Long.valueOf(vbreakdown[0]);
+        mmr[1] = Long.valueOf(vbreakdown[1]);
+        mmr[2] = Long.valueOf(vbreakdown[2]);
+        return mmr;
+    }
+
+    private URL getVersionCheckURL() {
+        try {
+            return new URL(getPluginYML().getChild("version.check.url").getString("missing.url"));
+        }
+        catch (MalformedURLException e) {
+            return null;
+        }
     }
 
     private YamlConfiguration getPluginYML() {

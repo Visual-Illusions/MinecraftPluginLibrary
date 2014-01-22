@@ -1,7 +1,7 @@
 /*
  * This file is part of VIMCPlugin.
  *
- * Copyright © 2013 Visual Illusions Entertainment
+ * Copyright © 2013-2014 Visual Illusions Entertainment
  *
  * VIMCPlugin is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 package net.visualillusionsent.minecraft.plugin;
 
-import net.visualillusionsent.utils.VersionChecker;
+import net.visualillusionsent.utils.ProgramChecker;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -31,7 +31,7 @@ import java.util.logging.Logger;
 public final class VisualIllusionsMinecraftPlugin {
 
     public static void checkStatus(VisualIllusionsPlugin plugin) {
-        String statusReport = "%s has declared itself as '%s' build. %s";
+        String statusReport = "%s has declared itself as '%s'. %s";
         switch (plugin.getStatus()) {
             case UNKNOWN:
                 plugin.getPluginLogger().severe(String.format(statusReport, plugin.getName(), "UNKNOWN STATUS", "Use is not advised and could cause damage to your system!"));
@@ -42,6 +42,9 @@ public final class VisualIllusionsMinecraftPlugin {
             case BETA:
                 plugin.getPluginLogger().warning(String.format(statusReport, plugin.getName(), "BETA", "Production use is not advised!"));
                 break;
+            case SNAPSHOT:
+                plugin.getPluginLogger().warning(String.format(statusReport, plugin.getName(), "SNAPSHOT", "Production use is not advised!"));
+                break;
             case RELEASE_CANDIDATE:
                 plugin.getPluginLogger().warning(String.format(statusReport, plugin.getName(), "RELEASE CANDIDATE", "Expect some bugs."));
                 break;
@@ -49,15 +52,17 @@ public final class VisualIllusionsMinecraftPlugin {
     }
 
     public static void checkVersion(VisualIllusionsPlugin plugin) {
-        VersionChecker vc = plugin.getVersionChecker();
-        if (vc != null) {
-            Boolean isLatest = vc.isLatest();
-            if (isLatest == null) {
-                plugin.getPluginLogger().warning("Version Checker Error: " + vc.getErrorMessage());
-            }
-            else if (!isLatest) {
-                plugin.getPluginLogger().warning(vc.getUpdateAvailableMessage());
-                plugin.getPluginLogger().warning(String.format("You can view update info @ %s#ChangeLog", plugin.getWikiURL()));
+        ProgramChecker programChecker = plugin.getProgramChecker();
+        if (programChecker != null) {
+            ProgramChecker.Status isLatest = programChecker.checkStatus();
+            switch (isLatest) {
+                case ERROR:
+                    plugin.getPluginLogger().warning("Version Checker Error: " + programChecker.getStatusMessage());
+                    break;
+                case UPDATE:
+                    plugin.getPluginLogger().warning(programChecker.getStatusMessage());
+                    plugin.getPluginLogger().warning(String.format("You can view update info @ %s#ChangeLog", plugin.getWikiURL()));
+                    break;
             }
         }
         else {

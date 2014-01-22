@@ -1,7 +1,7 @@
 /*
  * This file is part of VIMCPlugin.
  *
- * Copyright © 2013 Visual Illusions Entertainment
+ * Copyright © 2013-2014 Visual Illusions Entertainment
  *
  * VIMCPlugin is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,12 +20,14 @@ package net.visualillusionsent.minecraft.plugin.bukkit;
 import net.visualillusionsent.minecraft.plugin.VisualIllusionsMinecraftPlugin;
 import net.visualillusionsent.minecraft.plugin.VisualIllusionsPlugin;
 import net.visualillusionsent.utils.JarUtils;
+import net.visualillusionsent.utils.ProgramChecker;
 import net.visualillusionsent.utils.ProgramStatus;
-import net.visualillusionsent.utils.VersionChecker;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Calendar;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -37,7 +39,7 @@ import java.util.jar.JarFile;
  */
 public abstract class VisualIllusionsBukkitPlugin extends JavaPlugin implements VisualIllusionsPlugin {
 
-    private final VersionChecker vc;
+    private final ProgramChecker pChecker;
     private final YamlConfiguration pluginyml;
     private String majorMinor, revision;
     protected final boolean debug;
@@ -53,7 +55,7 @@ public abstract class VisualIllusionsBukkitPlugin extends JavaPlugin implements 
             Bukkit.getLogger().warning("Failed to read Visual Illusions Information from plugin.yml");
         }
         this.debug = Boolean.valueOf(System.getProperty("debug.".concat(getDefinedName().toLowerCase()), "false"));
-        this.vc = new VersionChecker(getDefinedName(), getMajorMinor(), getRevision(), getVersionCheckURL(), getStatus(), false);
+        this.pChecker = new ProgramChecker(getName(), getVersionArray(), getVersionCheckURL(), getStatus());
     }
 
     @Override
@@ -68,25 +70,6 @@ public abstract class VisualIllusionsBukkitPlugin extends JavaPlugin implements 
     }
 
     @Override
-    public final String getMajorMinor() {
-        if (majorMinor == null) {
-            String full = getDefinedVersion();
-            Bukkit.getLogger().info(getDefinedName() + " - Debug Version: " + full + " ");
-            majorMinor = full.substring(0, full.lastIndexOf('.'));
-        }
-        return majorMinor;
-    }
-
-    @Override
-    public final String getRevision() {
-        if (revision == null) {
-            String full = getDefinedVersion();
-            revision = full.substring(full.lastIndexOf('.') + 1);
-        }
-        return revision;
-    }
-
-    @Override
     public final String getBuild() {
         return getPluginYML().getString("build.number", "0");
     }
@@ -97,8 +80,8 @@ public abstract class VisualIllusionsBukkitPlugin extends JavaPlugin implements 
     }
 
     @Override
-    public final VersionChecker getVersionChecker() {
-        return vc;
+    public final ProgramChecker getProgramChecker() {
+        return pChecker;
     }
 
     @Override
@@ -121,8 +104,13 @@ public abstract class VisualIllusionsBukkitPlugin extends JavaPlugin implements 
         return getPluginYML().getString("copyright.years", String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
     }
 
-    private String getVersionCheckURL() {
-        return getPluginYML().getString("check.url", "missing.url");
+    private URL getVersionCheckURL() {
+        try {
+            return new URL(getPluginYML().getString("check.url", "missing.url"));
+        }
+        catch (MalformedURLException e) {
+            return null;
+        }
     }
 
     @Override
@@ -133,6 +121,16 @@ public abstract class VisualIllusionsBukkitPlugin extends JavaPlugin implements 
         catch (Exception ex) {
             return ProgramStatus.UNKNOWN;
         }
+    }
+
+    @Override
+    public final long[] getVersionArray() {
+        long[] mmr = new long[3];
+        String[] vbreakdown = getDefinedVersion().split("\\.");
+        mmr[0] = Long.valueOf(vbreakdown[0]);
+        mmr[1] = Long.valueOf(vbreakdown[1]);
+        mmr[2] = Long.valueOf(vbreakdown[2]);
+        return mmr;
     }
 
     private YamlConfiguration getPluginYML() {
