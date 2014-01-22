@@ -94,7 +94,7 @@ public abstract class VisualIllusionsCanaryPlugin extends Plugin implements Visu
     @Override
     public final long[] getVersionArray() {
         long[] mmr = new long[3];
-        String[] vbreakdown = getVersion().split("\\.");
+        String[] vbreakdown = getVersion().replace("-SNAPSHOT", "").split("\\.");
         mmr[0] = Long.valueOf(vbreakdown[0]);
         mmr[1] = Long.valueOf(vbreakdown[1]);
         mmr[2] = Long.valueOf(vbreakdown[2]);
