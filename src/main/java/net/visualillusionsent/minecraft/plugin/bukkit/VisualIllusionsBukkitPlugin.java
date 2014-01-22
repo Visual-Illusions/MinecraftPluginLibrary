@@ -41,7 +41,6 @@ public abstract class VisualIllusionsBukkitPlugin extends JavaPlugin implements 
 
     private final ProgramChecker pChecker;
     private final YamlConfiguration pluginyml;
-    private String majorMinor, revision;
     protected final boolean debug;
 
     public VisualIllusionsBukkitPlugin() {
@@ -55,7 +54,7 @@ public abstract class VisualIllusionsBukkitPlugin extends JavaPlugin implements 
             Bukkit.getLogger().warning("Failed to read Visual Illusions Information from plugin.yml");
         }
         this.debug = Boolean.valueOf(System.getProperty("debug.".concat(getDefinedName().toLowerCase()), "false"));
-        this.pChecker = new ProgramChecker(getName(), getVersionArray(), getStatusURL(), getStatus());
+        this.pChecker = new ProgramChecker(getDefinedName(), getVersionArray(), getStatusURL(), getStatus());
     }
 
     @Override

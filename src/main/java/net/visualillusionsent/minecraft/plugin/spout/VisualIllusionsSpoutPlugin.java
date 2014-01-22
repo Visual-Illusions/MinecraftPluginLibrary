@@ -54,7 +54,7 @@ public abstract class VisualIllusionsSpoutPlugin extends Plugin implements Visua
             throw new RuntimeException("Failed to read Visual Illusions Information from plugin.yml");
         }
         this.pluginyml = temp;
-        this.pChecker = new ProgramChecker(getName(), getVersionArray(), getStatusURL(), getStatus());
+        this.pChecker = new ProgramChecker(getDefinedName(), getVersionArray(), getStatusURL(), getStatus());
     }
 
     @Override
