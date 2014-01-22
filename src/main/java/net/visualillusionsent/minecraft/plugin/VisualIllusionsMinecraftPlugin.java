@@ -77,7 +77,7 @@ public final class VisualIllusionsMinecraftPlugin {
             try {
                 URLConnection conn = site.openConnection();
                 ReadableByteChannel rbc = Channels.newChannel(conn.getInputStream());
-                FileOutputStream fos = new FileOutputStream(lib);
+                FileOutputStream fos = new FileOutputStream(library);
                 fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
             }
             catch (Exception ex) {
