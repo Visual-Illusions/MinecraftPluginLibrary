@@ -18,15 +18,15 @@
 package net.visualillusionsent.minecraft.plugin.bukkit;
 
 import net.visualillusionsent.minecraft.plugin.VisualIllusionsInformationCommand;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 
 /**
  * Visual Illusions Bukkit Plugin Information command
  *
  * @author Jason (darkdiplomat)
  */
-public abstract class VisualIllusionsBukkitPluginInformationCommand extends VisualIllusionsInformationCommand implements CommandExecutor {
+public abstract class VisualIllusionsBukkitPluginInformationCommand extends VisualIllusionsInformationCommand implements TabExecutor {
 
     public VisualIllusionsBukkitPluginInformationCommand(VisualIllusionsBukkitPlugin plugin) {
         super(plugin);

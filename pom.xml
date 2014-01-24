@@ -222,8 +222,7 @@
                         <name>${project.name}</name>
                         <years>${project.inceptionYear}-${current.year}</years>
                         <gpl.type>GNU Lesser General Public License</gpl.type>
-                        <license.url>http://www.gnu.org/licenses/lgpl.html
-                        </license.url>
+                        <license.url>http://www.gnu.org/licenses/lgpl.html</license.url>
                     </properties>
                     <includes>
                         <include>src/main/java/**</include>
