@@ -30,11 +30,11 @@ import java.io.FileInputStream;
 public abstract class MessageTranslator extends LocaleHelper {
     private static final String langDirFormat = "lang/%s/";
 
-    protected MessageTranslator(VisualIllusionsPlugin plugin, String defaultLocale) {
-        super(true, getBaseDir(plugin), defaultLocale);
+    protected MessageTranslator(VisualIllusionsPlugin plugin, String defaultLocale, boolean updateLang) {
+        super(true, getBaseDir(plugin, updateLang), defaultLocale);
     }
 
-    private static String getBaseDir(VisualIllusionsPlugin plugin) {
+    private static String getBaseDir(VisualIllusionsPlugin plugin, boolean updateLang) {
         String lang_dir = String.format(langDirFormat, plugin.getName());
         File dir = new File(lang_dir);
         if (!dir.exists()) {
@@ -44,14 +44,18 @@ public abstract class MessageTranslator extends LocaleHelper {
             if (!new File(dir, "languages.txt").exists()) {
                 FileUtils.cloneFileFromJar(JarUtils.getJarPath(plugin.getClass()), "resources/lang/".concat("languages.txt"), lang_dir.concat("languages.txt"));
             }
-            else if (!FileUtils.md5SumMatch(plugin.getClass().getResourceAsStream("/resources/lang/languages.txt"), new FileInputStream(lang_dir.concat("languages.txt")))) {
-                FileUtils.cloneFileFromJar(JarUtils.getJarPath(plugin.getClass()), "resources/lang/".concat("languages.txt"), lang_dir.concat("languages.txt"));
-            }
+            
             if (!new File(dir, "en_US.lang").exists()) {
                 FileUtils.cloneFileFromJar(JarUtils.getJarPath(plugin.getClass()), "resources/lang/".concat("en_US.lang"), lang_dir.concat("en_US.lang"));
             }
-            else if (!FileUtils.md5SumMatch(plugin.getClass().getResourceAsStream("/resources/lang/en_US.lang"), new FileInputStream(lang_dir.concat("en_US.lang")))) {
-                FileUtils.cloneFileFromJar(JarUtils.getJarPath(plugin.getClass()), "resources/lang/".concat("en_US.lang"), lang_dir.concat("en_US.lang"));
+            
+            if(updateLang){
+                if (!FileUtils.md5SumMatch(plugin.getClass().getResourceAsStream("/resources/lang/languages.txt"), new FileInputStream(lang_dir.concat("languages.txt")))) {
+                    FileUtils.cloneFileFromJar(JarUtils.getJarPath(plugin.getClass()), "resources/lang/".concat("languages.txt"), lang_dir.concat("languages.txt"));
+                }
+                if (!FileUtils.md5SumMatch(plugin.getClass().getResourceAsStream("/resources/lang/en_US.lang"), new FileInputStream(lang_dir.concat("en_US.lang")))) {
+                    FileUtils.cloneFileFromJar(JarUtils.getJarPath(plugin.getClass()), "resources/lang/".concat("en_US.lang"), lang_dir.concat("en_US.lang"));
+                }
             }
         }
         catch (Exception ex) {
