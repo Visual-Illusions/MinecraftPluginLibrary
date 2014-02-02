@@ -35,7 +35,7 @@ public abstract class MessageTranslator extends LocaleHelper {
     }
 
     private static String getBaseDir(VisualIllusionsPlugin plugin, boolean updateLang) {
-        String lang_dir = String.format(langDirFormat, plugin.getName());
+        String lang_dir = String.format(langDirFormat, plugin.getPluginName());
         File dir = new File(lang_dir);
         if (!dir.exists()) {
             dir.mkdirs();
@@ -44,12 +44,12 @@ public abstract class MessageTranslator extends LocaleHelper {
             if (!new File(dir, "languages.txt").exists()) {
                 FileUtils.cloneFileFromJar(JarUtils.getJarPath(plugin.getClass()), "resources/lang/".concat("languages.txt"), lang_dir.concat("languages.txt"));
             }
-            
+
             if (!new File(dir, "en_US.lang").exists()) {
                 FileUtils.cloneFileFromJar(JarUtils.getJarPath(plugin.getClass()), "resources/lang/".concat("en_US.lang"), lang_dir.concat("en_US.lang"));
             }
-            
-            if(updateLang){
+
+            if (updateLang) {
                 if (!FileUtils.md5SumMatch(plugin.getClass().getResourceAsStream("/resources/lang/languages.txt"), new FileInputStream(lang_dir.concat("languages.txt")))) {
                     FileUtils.cloneFileFromJar(JarUtils.getJarPath(plugin.getClass()), "resources/lang/".concat("languages.txt"), lang_dir.concat("languages.txt"));
                 }

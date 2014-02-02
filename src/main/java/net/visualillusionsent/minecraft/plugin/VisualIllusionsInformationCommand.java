@@ -37,7 +37,7 @@ public abstract class VisualIllusionsInformationCommand {
         this.plugin = plugin;
 
         ArrayList<String> pre = new ArrayList<String>();
-        pre.add(center("§B--- §A".concat(plugin.getName()).concat(" §6v").concat(plugin.getVersion()).concat(" §B---")));
+        pre.add(center("§B--- §A".concat(plugin.getPluginName()).concat(" §6v").concat(plugin.getPluginVersion()).concat(" §B---")));
         pre.add("$VERSION_CHECK$");
         pre.add("§BJenkins Build: §A".concat(plugin.getBuild()));
         pre.add("§BBuilt On: §A".concat(plugin.getBuildTime()));
@@ -46,7 +46,7 @@ public abstract class VisualIllusionsInformationCommand {
         pre.add("§BIssues: §A".concat(plugin.getIssuesURL()));
 
         // Next line should always remain at the end of the About
-        pre.add(center(String.format("§BCopyright © %s §AVisual §6I§9l§Bl§4u§As§2i§5o§En§7s §6Entertainment", plugin.getCopyYear())));
+        pre.add(center(String.format("§BCopyright © %s §AVisual §6Illusions §AEntertainment", plugin.getCopyYear())));
 
         about = Collections.unmodifiableList(pre);
     }

@@ -33,9 +33,9 @@ public interface VisualIllusionsPlugin {
       As of 20 October 2013, versions are now Major.Minor.Revision for all Visual Illusions Plugins
      */
 
-    String getName();
+    String getPluginName();
 
-    String getVersion();
+    String getPluginVersion();
 
     long[] getVersionArray();
 

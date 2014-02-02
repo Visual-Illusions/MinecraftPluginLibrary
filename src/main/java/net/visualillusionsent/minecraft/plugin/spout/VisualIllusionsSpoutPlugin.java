@@ -23,13 +23,14 @@ import net.visualillusionsent.utils.JarUtils;
 import net.visualillusionsent.utils.ProgramChecker;
 import net.visualillusionsent.utils.ProgramStatus;
 import org.spout.api.plugin.Plugin;
-import org.spout.cereal.config.yaml.YamlConfiguration;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Calendar;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
+import java.util.StringTokenizer;
+import java.util.jar.Manifest;
+import java.util.logging.Logger;
 
 /**
  * Visual Illusions Spout Plugin extension
@@ -38,23 +39,16 @@ import java.util.jar.JarFile;
  */
 public abstract class VisualIllusionsSpoutPlugin extends Plugin implements VisualIllusionsPlugin {
 
-    private ProgramChecker pChecker;
-    private final YamlConfiguration pluginyml;
-    private final boolean debug = Boolean.valueOf(System.getProperty("debug.".concat(getName().toLowerCase()), "false"));
+    private final ProgramChecker pChecker;
+    private final Manifest manifest;
+    private final long[] versionArray;
+    protected final boolean debug;
 
     public VisualIllusionsSpoutPlugin() {
-        YamlConfiguration temp = null;
-        try {
-            JarFile jfile = new JarFile(getJarPath());
-            JarEntry pyml = jfile.getJarEntry("properties.yml");
-            temp = new YamlConfiguration(jfile.getInputStream(pyml));
-            temp.load();
-        }
-        catch (Exception ex) {
-            throw new RuntimeException("Failed to read Visual Illusions Information from plugin.yml");
-        }
-        this.pluginyml = temp;
-        this.pChecker = new ProgramChecker(getDefinedName(), getVersionArray(), getStatusURL(), getStatus());
+        this.manifest = readManifest();
+        this.versionArray = createVersionArray();
+        this.debug = Boolean.valueOf(System.getProperty("debug.".concat(getPluginName().toLowerCase()), "false"));
+        this.pChecker = new ProgramChecker(getPluginName(), getVersionArray(), getStatusURL(), getStatus());
     }
 
     @Override
@@ -64,13 +58,27 @@ public abstract class VisualIllusionsSpoutPlugin extends Plugin implements Visua
     }
 
     @Override
+    public final String getPluginName() {
+        if (manifest != null) {
+            return manifest.getMainAttributes().getValue("Title");
+        }
+        return "UnknownVISpoutPlugin";
+    }
+
+    @Override
     public final String getBuild() {
-        return getPluginYML().getChild("build.number").getString("0");
+        if (manifest != null) {
+            return manifest.getMainAttributes().getValue("Version");
+        }
+        return "dev";
     }
 
     @Override
     public final String getBuildTime() {
-        return getPluginYML().getChild("build.time").getString("19700101-0000");
+        if (manifest != null) {
+            return manifest.getMainAttributes().getValue("Build-Time");
+        }
+        return "19700101-0000";
     }
 
     @Override
@@ -80,63 +88,86 @@ public abstract class VisualIllusionsSpoutPlugin extends Plugin implements Visua
 
     @Override
     public final String getWikiURL() {
-        return getPluginYML().getChild("website").getString("missing.url");
+        if (manifest != null) {
+            return manifest.getMainAttributes().getValue("Wiki-URL");
+        }
+        return "http://visualillusionsent.net";
     }
 
     @Override
     public final String getIssuesURL() {
-        return getPluginYML().getChild("issues.url").getString("missing.url");
+        if (manifest != null) {
+            return manifest.getMainAttributes().getValue("Issues-URL");
+        }
+        return "https://github.com/Visual-Illusions/";
     }
 
     @Override
     public final String getDevelopers() {
-        return getPluginYML().getChild("developers").getString("missing.developers");
+        if (manifest != null) {
+            return manifest.getMainAttributes().getValue("Developers");
+        }
+        return "darkdiplomat";
     }
 
     @Override
     public final String getCopyYear() {
-        return getPluginYML().getChild("copyright.years").getString(String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
+        if (manifest != null) {
+            return manifest.getMainAttributes().getValue("Copyright");
+        }
+        return "2013-" + Calendar.getInstance().get(Calendar.YEAR);
+    }
+
+    @Override
+    public final String getPluginVersion() {
+        if (manifest != null) {
+            return manifest.getMainAttributes().getValue("Version");
+        }
+        return "0.0.1-SNAPSHOT";
     }
 
     @Override
     public final ProgramStatus getStatus() {
-        return getDefinedVersion().contains("-SNAPSHOT") ? ProgramStatus.SNAPSHOT : ProgramStatus.STABLE;
+        return getPluginVersion().contains("-SNAPSHOT") ? ProgramStatus.SNAPSHOT : ProgramStatus.STABLE;
     }
 
     @Override
     public final long[] getVersionArray() {
-        long[] mmr = new long[3];
-        String[] vbreakdown = getDescription().getVersion().split("\\.");
-        mmr[0] = Long.valueOf(vbreakdown[0]);
-        mmr[1] = Long.valueOf(vbreakdown[1]);
-        mmr[2] = Long.valueOf(vbreakdown[2]);
+        return versionArray;
+    }
+
+    @Override
+    public Logger getPluginLogger() {
+        return logger;
+    }
+
+    private Manifest readManifest() {
+        try {
+            return JarUtils.getManifest(this.getClass());
+        }
+        catch (IOException ioex) {
+        }
+        return null;
+    }
+
+    private long[] createVersionArray() {
+        StringTokenizer tokenizer = new StringTokenizer(getPluginVersion().replace("-SNAPSHOT", ""), ".");
+        long[] mmr = new long[tokenizer.countTokens()];
+        for (int index = 0; index < mmr.length; index++) {
+            mmr[index] = Long.parseLong(tokenizer.nextToken());
+        }
         return mmr;
     }
 
     private URL getStatusURL() {
-        try {
-            return new URL(getPluginYML().getChild("status.url").getString("missing.url"));
+        if (manifest != null) {
+            try {
+                return new URL(manifest.getMainAttributes().getValue("Status-URL"));
+            }
+            catch (MalformedURLException murlex) {
+
+            }
         }
-        catch (MalformedURLException e) {
-            return null;
-        }
-    }
-
-    // Spout is late to define these properties so we grab them directly from our properties.yml instance
-    private String getDefinedName() {
-        return getPluginYML().getChild("name").getString("UnknownVISpoutPlugin");
-    }
-
-    private String getDefinedVersion() {
-        return getPluginYML().getChild("version").getString("0.0.0");
-    }
-    //
-
-    private YamlConfiguration getPluginYML() {
-        return this.pluginyml;
-    }
-
-    private String getJarPath() {
-        return JarUtils.getJarPath(this.getClass());
+        return null;
     }
 }
