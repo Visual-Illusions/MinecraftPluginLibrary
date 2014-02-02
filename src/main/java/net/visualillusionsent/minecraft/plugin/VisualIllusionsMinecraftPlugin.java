@@ -34,19 +34,19 @@ public final class VisualIllusionsMinecraftPlugin {
         String statusReport = "%s has declared itself as '%s'. %s";
         switch (plugin.getStatus()) {
             case UNKNOWN:
-                plugin.getPluginLogger().severe(String.format(statusReport, plugin.getName(), "UNKNOWN STATUS", "Use is not advised and could cause damage to your system!"));
+                plugin.getPluginLogger().severe(String.format(statusReport, plugin.getPluginName(), "UNKNOWN STATUS", "Use is not advised and could cause damage to your system!"));
                 break;
             case ALPHA:
-                plugin.getPluginLogger().warning(String.format(statusReport, plugin.getName(), "ALPHA", "Production use is not advised!"));
+                plugin.getPluginLogger().warning(String.format(statusReport, plugin.getPluginName(), "ALPHA", "Production use is not advised!"));
                 break;
             case BETA:
-                plugin.getPluginLogger().warning(String.format(statusReport, plugin.getName(), "BETA", "Production use is not advised!"));
+                plugin.getPluginLogger().warning(String.format(statusReport, plugin.getPluginName(), "BETA", "Production use is not advised!"));
                 break;
             case SNAPSHOT:
-                plugin.getPluginLogger().warning(String.format(statusReport, plugin.getName(), "SNAPSHOT", "Production use is not advised!"));
+                plugin.getPluginLogger().warning(String.format(statusReport, plugin.getPluginName(), "SNAPSHOT", "Production use is not advised!"));
                 break;
             case RELEASE_CANDIDATE:
-                plugin.getPluginLogger().warning(String.format(statusReport, plugin.getName(), "RELEASE CANDIDATE", "Expect some bugs."));
+                plugin.getPluginLogger().warning(String.format(statusReport, plugin.getPluginName(), "RELEASE CANDIDATE", "Expect some bugs."));
                 break;
         }
     }
