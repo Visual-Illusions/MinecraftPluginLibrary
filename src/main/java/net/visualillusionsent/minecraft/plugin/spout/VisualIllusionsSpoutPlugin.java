@@ -60,15 +60,15 @@ public abstract class VisualIllusionsSpoutPlugin extends Plugin implements Visua
     @Override
     public final String getPluginName() {
         if (manifest != null) {
-            return manifest.getMainAttributes().getValue("Title");
+            return manifest.getMainAttributes().getValue("Specification-Title");
         }
-        return "UnknownVISpoutPlugin";
+        return "UnknownVICanaryPlugin";
     }
 
     @Override
     public final String getBuild() {
         if (manifest != null) {
-            return manifest.getMainAttributes().getValue("Version");
+            return manifest.getMainAttributes().getValue("Implementation-Version");
         }
         return "dev";
     }
@@ -121,7 +121,7 @@ public abstract class VisualIllusionsSpoutPlugin extends Plugin implements Visua
     @Override
     public final String getPluginVersion() {
         if (manifest != null) {
-            return manifest.getMainAttributes().getValue("Version");
+            return manifest.getMainAttributes().getValue("Specification-Version");
         }
         return "0.0.1-SNAPSHOT";
     }

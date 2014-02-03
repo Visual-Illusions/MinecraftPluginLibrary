@@ -31,6 +31,7 @@ import java.net.URL;
 import java.util.Calendar;
 import java.util.StringTokenizer;
 import java.util.jar.Manifest;
+import java.util.logging.Logger;
 
 /**
  * Visual Illusions Bukkit Plugin extension
@@ -60,15 +61,15 @@ public abstract class VisualIllusionsBukkitPlugin extends JavaPlugin implements 
     @Override
     public final String getPluginName() {
         if (manifest != null) {
-            return manifest.getMainAttributes().getValue("Title");
+            return manifest.getMainAttributes().getValue("Specification-Title");
         }
-        return "UnknownVIBukkitPlugin";
+        return "UnknownVICanaryPlugin";
     }
 
     @Override
     public final String getBuild() {
         if (manifest != null) {
-            return manifest.getMainAttributes().getValue("Version");
+            return manifest.getMainAttributes().getValue("Implementation-Version");
         }
         return "dev";
     }
@@ -121,7 +122,7 @@ public abstract class VisualIllusionsBukkitPlugin extends JavaPlugin implements 
     @Override
     public final String getPluginVersion() {
         if (manifest != null) {
-            return manifest.getMainAttributes().getValue("Version");
+            return manifest.getMainAttributes().getValue("Specification-Version");
         }
         return "0.0.1-SNAPSHOT";
     }
@@ -134,6 +135,11 @@ public abstract class VisualIllusionsBukkitPlugin extends JavaPlugin implements 
     @Override
     public final long[] getVersionArray() {
         return versionArray;
+    }
+
+    @Override
+    public Logger getPluginLogger() {
+        return getLogger();
     }
 
     private Manifest readManifest() {
