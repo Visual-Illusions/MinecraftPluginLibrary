@@ -50,14 +50,24 @@ public abstract class VisualIllusionsCanaryPlugin extends Plugin implements Visu
         this.versionArray = createVersionArray();
         this.debug = Boolean.valueOf(System.getProperty("debug.".concat(getPluginName().toLowerCase()), "false"));
         this.pChecker = new ProgramChecker(getPluginName(), getVersionArray(), getStatusURL(), getStatus());
+        this.pChecker.setConnectionTimeOut(1500);
         this.logger = new WrappedLogger(getLogman());
     }
 
     @Override
     public boolean enable() {
-        VisualIllusionsMinecraftPlugin.checkVersion(this);
-        VisualIllusionsMinecraftPlugin.checkStatus(this);
+        try {
+            VisualIllusionsMinecraftPlugin.checkStatus(this);
+            VisualIllusionsMinecraftPlugin.checkVersion(this);
+        }
+        catch (Exception ex) {
+            // SUPPRESSED
+        }
         return true;
+    }
+
+    @Override
+    public void disable() {
     }
 
     @Override

@@ -49,12 +49,22 @@ public abstract class VisualIllusionsSpoutPlugin extends Plugin implements Visua
         this.versionArray = createVersionArray();
         this.debug = Boolean.valueOf(System.getProperty("debug.".concat(getPluginName().toLowerCase()), "false"));
         this.pChecker = new ProgramChecker(getPluginName(), getVersionArray(), getStatusURL(), getStatus());
+        this.pChecker.setConnectionTimeOut(1500);
     }
 
     @Override
     public void onEnable() {
-        VisualIllusionsMinecraftPlugin.checkVersion(this);
-        VisualIllusionsMinecraftPlugin.checkStatus(this);
+        try {
+            VisualIllusionsMinecraftPlugin.checkStatus(this);
+            VisualIllusionsMinecraftPlugin.checkVersion(this);
+        }
+        catch (Exception ex) {
+            // SUPPRESSED
+        }
+    }
+
+    @Override
+    public void onDisable() {
     }
 
     @Override
