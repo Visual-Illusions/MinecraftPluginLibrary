@@ -57,7 +57,7 @@ public final class VisualIllusionsMinecraftPlugin {
             ProgramChecker.Status isLatest = programChecker.checkStatus();
             switch (isLatest) {
                 case ERROR:
-                    plugin.getPluginLogger().warning("Version Checker Error: " + programChecker.getStatusMessage());
+                    plugin.getPluginLogger().warning("Program Checker: " + programChecker.getStatusMessage());
                     break;
                 case UPDATE:
                     plugin.getPluginLogger().warning(programChecker.getStatusMessage());
@@ -66,7 +66,7 @@ public final class VisualIllusionsMinecraftPlugin {
             }
         }
         else {
-            plugin.getPluginLogger().warning("No VersionChecker instance available.");
+            plugin.getPluginLogger().warning("No ProgramChecker instance available.");
         }
     }
 

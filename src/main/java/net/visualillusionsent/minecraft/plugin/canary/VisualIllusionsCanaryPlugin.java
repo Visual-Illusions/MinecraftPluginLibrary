@@ -20,6 +20,7 @@ package net.visualillusionsent.minecraft.plugin.canary;
 import net.canarymod.plugin.Plugin;
 import net.visualillusionsent.minecraft.plugin.VisualIllusionsMinecraftPlugin;
 import net.visualillusionsent.minecraft.plugin.VisualIllusionsPlugin;
+import net.visualillusionsent.minecraft.plugin.integrity.SelfIntegrityChecker;
 import net.visualillusionsent.utils.JarUtils;
 import net.visualillusionsent.utils.ProgramChecker;
 import net.visualillusionsent.utils.ProgramStatus;
@@ -42,6 +43,7 @@ public abstract class VisualIllusionsCanaryPlugin extends Plugin implements Visu
     private final ProgramChecker pChecker;
     private final Manifest manifest;
     private final long[] versionArray;
+    private final SelfIntegrityChecker sic;
     protected final boolean debug;
     protected final WrappedLogger logger;
 
@@ -52,11 +54,13 @@ public abstract class VisualIllusionsCanaryPlugin extends Plugin implements Visu
         this.pChecker = new ProgramChecker(getPluginName(), getVersionArray(), getStatusURL(), getStatus());
         this.pChecker.setConnectionTimeOut(1500);
         this.logger = new WrappedLogger(getLogman());
+        this.sic = new SelfIntegrityChecker(this);
     }
 
     @Override
     public boolean enable() {
         try {
+            sic.selfTest();
             VisualIllusionsMinecraftPlugin.checkStatus(this);
             VisualIllusionsMinecraftPlugin.checkVersion(this);
         }
@@ -159,6 +163,7 @@ public abstract class VisualIllusionsCanaryPlugin extends Plugin implements Visu
             return JarUtils.getManifest(this.getClass());
         }
         catch (IOException ioex) {
+            //IGNORED
         }
         return null;
     }

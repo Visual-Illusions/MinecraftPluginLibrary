@@ -19,6 +19,7 @@ package net.visualillusionsent.minecraft.plugin.spout;
 
 import net.visualillusionsent.minecraft.plugin.VisualIllusionsMinecraftPlugin;
 import net.visualillusionsent.minecraft.plugin.VisualIllusionsPlugin;
+import net.visualillusionsent.minecraft.plugin.integrity.SelfIntegrityChecker;
 import net.visualillusionsent.utils.JarUtils;
 import net.visualillusionsent.utils.ProgramChecker;
 import net.visualillusionsent.utils.ProgramStatus;
@@ -42,6 +43,7 @@ public abstract class VisualIllusionsSpoutPlugin extends Plugin implements Visua
     private final ProgramChecker pChecker;
     private final Manifest manifest;
     private final long[] versionArray;
+    private final SelfIntegrityChecker sic;
     protected final boolean debug;
 
     public VisualIllusionsSpoutPlugin() {
@@ -50,11 +52,13 @@ public abstract class VisualIllusionsSpoutPlugin extends Plugin implements Visua
         this.debug = Boolean.valueOf(System.getProperty("debug.".concat(getPluginName().toLowerCase()), "false"));
         this.pChecker = new ProgramChecker(getPluginName(), getVersionArray(), getStatusURL(), getStatus());
         this.pChecker.setConnectionTimeOut(1500);
+        this.sic = new SelfIntegrityChecker(this);
     }
 
     @Override
     public void onEnable() {
         try {
+            sic.selfTest();
             VisualIllusionsMinecraftPlugin.checkStatus(this);
             VisualIllusionsMinecraftPlugin.checkVersion(this);
         }

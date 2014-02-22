@@ -227,6 +227,9 @@
                     <includes>
                         <include>src/main/java/**</include>
                     </includes>
+                    <excludes>
+                        <exclude>src/main/java/net/visualillusionsent/minecraft/plugin/integrity/JarVerifier.java</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
             <!-- Compile plugin -->
