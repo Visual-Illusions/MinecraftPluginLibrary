@@ -56,14 +56,20 @@ public final class SelfIntegrityChecker {
         }
         try {
             JarFile jarFile = JarUtils.getJarForClass(SelfIntegrityChecker.class);
-            JarVerifier.verify(jarFile, new X509Certificate[]{ providerCert });
+            JarVerifier.verify(jarFile, new X509Certificate[]{providerCert});
             verifiedSelfIntegrity = true;
             return true;
         }
-        catch (Exception ex) {
-            plugin.getPluginLogger().warning("Failed to verify self integrity... (Verification failure)");
-            return false;
+        catch (SecurityException sex) {
+            plugin.getPluginLogger().warning("Failed to verify self integrity... (" + sex.getMessage() + ")");
         }
+        catch (CertificateException e) {
+            plugin.getPluginLogger().warning("Failed to verify self integrity... (Verification failure)");
+        }
+        catch (IOException e) {
+            plugin.getPluginLogger().warning("Failed to verify self integrity... (IO failure)");
+        }
+        return false;
     }
 
     private X509Certificate getCertificate() throws IOException, CertificateException {

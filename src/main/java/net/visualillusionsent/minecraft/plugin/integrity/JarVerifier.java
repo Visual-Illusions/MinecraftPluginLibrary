@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package net.visualillusionsent.minecraft.plugin.integrity;
 
 import java.io.IOException;
@@ -28,7 +27,7 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
 /**
- * Verifies a signed jar file given an array of truted CA certs
+ * Verifies a signed jar file given an array of trusted CA certs
  *
  * @author Andrew Harrison
  * @version $Revision: 148 $
@@ -43,8 +42,9 @@ public class JarVerifier {
 
         // Ensure there is a manifest file
         Manifest man = jf.getManifest();
-        if (man == null)
+        if (man == null) {
             throw new SecurityException("The JAR is not signed");
+        }
 
         // Ensure all the entries' signatures verify correctly
         byte[] buffer = new byte[8192];
@@ -68,16 +68,16 @@ public class JarVerifier {
         while (e.hasMoreElements()) {
             JarEntry je = (JarEntry) e.nextElement();
 
-            if (je.isDirectory())
+            if (je.isDirectory()) {
                 continue;
+            }
             // Every file must be signed - except
             // files in META-INF
             Certificate[] certs = je.getCertificates();
             if ((certs == null) || (certs.length == 0)) {
-                if (!je.getName().startsWith("META-INF"))
-                    throw new SecurityException("The JCE framework " +
-                            "has unsigned " +
-                            "class files.");
+                if (!je.getName().startsWith("META-INF")) {
+                    throw new SecurityException("The JCE framework has unsigned class files.");
+                }
             }
             else {
                 // Check whether the file
