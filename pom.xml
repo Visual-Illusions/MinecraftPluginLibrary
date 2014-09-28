@@ -7,11 +7,11 @@
     <artifactId>vimcplugin</artifactId>
     <name>VIMCPlugin</name>
     <!-- Change minor version if library functionality changes, revision if a dependency version has changed -->
-    <version>1.1.0</version>
+    <version>1.1.1-SNAPSHOT</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <viutils.version>1.4.0</viutils.version>
-        <canary.version>1.1.0</canary.version>
+        <canary.version>1.1.1-SNAPSHOT</canary.version>
         <bukkit.version>1.7.9-R0.2</bukkit.version>
     </properties>
     <description>
