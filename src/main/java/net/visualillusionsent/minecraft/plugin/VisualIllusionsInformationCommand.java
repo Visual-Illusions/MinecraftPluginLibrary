@@ -83,13 +83,13 @@ public abstract class VisualIllusionsInformationCommand {
             if (msg.equals("$VERSION_CHECK$")) {
                 ProgramChecker programChecker = plugin.getProgramChecker();
                 ProgramChecker.Status isLatest = programChecker.checkStatus();
-                String prefix = "§4";
+                ChatFormat prefix = ChatFormat.RED;
                 switch (isLatest) {
                     case LATEST:
-                        prefix = "§2";
+                        prefix = ChatFormat.GREEN;
                         break;
                     case UPDATE:
-                        prefix = "§6";
+                        prefix = ChatFormat.ORANGE;
                         break;
                 }
                 receiver.message(center(prefix.concat(programChecker.getStatusMessage())));
@@ -125,6 +125,6 @@ public abstract class VisualIllusionsInformationCommand {
      * @return the clean string
      */
     private String clean(String toClean) {
-        return toClean.replaceAll("§[A-FK-NRa-fk-nr0-9]", "");
+        return toClean.replaceAll(ChatFormat.MARKER.concat("[A-FK-NRa-fk-nr0-9]"), "");
     }
 }

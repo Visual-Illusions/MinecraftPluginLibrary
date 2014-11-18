@@ -25,7 +25,7 @@ import net.visualillusionsent.minecraft.plugin.ModMessageReceiver;
  *
  * @author Jason (darkdiplomat)
  */
-public class CanaryMessageReceiver implements ModMessageReceiver {
+public class CanaryMessageReceiver implements ModMessageReceiver<MessageReceiver> {
     private final MessageReceiver receiver;
 
     public CanaryMessageReceiver(MessageReceiver receiver) {

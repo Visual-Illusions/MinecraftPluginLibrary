@@ -22,11 +22,11 @@ package net.visualillusionsent.minecraft.plugin;
  *
  * @author Jason (darkdiplomat)
  */
-public interface ModMessageReceiver {
+public interface ModMessageReceiver<T> {
 
     void message(String message);
 
     String getName();
 
-    <T> T unwrap();
+    T unwrap();
 }

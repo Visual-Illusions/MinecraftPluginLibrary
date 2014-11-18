@@ -38,7 +38,9 @@ public abstract class MessageTranslator extends LocaleHelper {
         String lang_dir = String.format(langDirFormat, plugin.getPluginName());
         File dir = new File(lang_dir);
         if (!dir.exists()) {
-            dir.mkdirs();
+            if (!dir.mkdirs()) {
+                throw new PluginInitializationException("Unable to create lang files directory");
+            }
         }
         try {
             if (!new File(dir, "languages.txt").exists()) {

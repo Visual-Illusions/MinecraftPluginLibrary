@@ -41,7 +41,6 @@ public final class WrappedLogger extends Logger {
     public final void log(Level level, String msg) {
         org.apache.logging.log4j.Level conv = convertLevel(level);
         if (conv == null) {
-            conv = org.apache.logging.log4j.Level.INFO;
             Marker mark = MarkerManager.getMarker(level.getName());
             logman.log(org.apache.logging.log4j.Level.INFO, mark, msg);
         }
