@@ -4,18 +4,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.visualillusionsent</groupId>
-    <artifactId>vimcplugin</artifactId>
-    <name>VIMCPlugin</name>
+    <artifactId>mcpluginlib</artifactId>
+    <name>Visual Illusions Minecraft Plugin Base Library</name>
     <!-- Change minor version if library functionality changes, revision if a dependency version has changed -->
-    <version>1.1.1-SNAPSHOT</version>
+    <version>1.2.0-SNAPSHOT</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <viutils.version>1.4.0</viutils.version>
-        <canary.version>1.1.1-SNAPSHOT</canary.version>
-        <bukkit.version>1.7.9-R0.2</bukkit.version>
+        <viutils.version>1.4.1-SNAPSHOT</viutils.version>
+        <canary.version>1.2.0-SNAPSHOT</canary.version>
     </properties>
     <description>
-        Visual Illusions Minecraft Plugin Library
+        Visual Illusions Minecraft Plugin Base Library
         Designed as a base for all Visual Illusions plugins
     </description>
     <licenses>
@@ -73,61 +72,20 @@
                 <updatePolicy>always</updatePolicy>
             </snapshots>
         </repository>
-        <!-- Bukkit -->
-        <repository>
-            <id>repo-bukkit</id>
-            <name>Bukkit Public Repository</name>
-            <url>http://repo.bukkit.org/content/groups/public</url>
-            <releases>
-                <updatePolicy>always</updatePolicy>
-            </releases>
-            <snapshots>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-        </repository>
     </repositories>
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>net.visualillusionsent</groupId>
-                <artifactId>viutils</artifactId>
-                <version>${viutils.version}</version>
-                <scope>compile</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.bukkit</groupId>
-                <artifactId>bukkit</artifactId>
-                <version>${bukkit.version}</version>
-                <scope>compile</scope>
-            </dependency>
-            <dependency>
-                <groupId>net.canarymod</groupId>
-                <artifactId>CanaryLib</artifactId>
-                <version>${canary.version}</version>
-                <scope>compile</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
     <dependencies>
-        <!-- Mods -->
-        <dependency>
-            <groupId>net.canarymod</groupId>
-            <artifactId>CanaryLib</artifactId>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>bukkit</artifactId>
-            <scope>compile</scope>
-        </dependency>
-        <!-- Mods End -->
-        <!-- Libraries -->
         <dependency>
             <groupId>net.visualillusionsent</groupId>
             <artifactId>viutils</artifactId>
+            <version>${viutils.version}</version>
             <scope>compile</scope>
         </dependency>
-        <!-- Libraries End -->
+        <dependency>
+            <groupId>net.canarymod</groupId>
+            <artifactId>CanaryLib</artifactId>
+            <version>${canary.version}</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -178,7 +136,8 @@
                         <include>src/main/java/**</include>
                     </includes>
                     <excludes>
-                        <exclude>src/main/java/net/visualillusionsent/minecraft/plugin/integrity/JarVerifier.java</exclude>
+                        <exclude>src/main/java/net/visualillusionsent/minecraft/plugin/integrity/JarVerifier.java
+                        </exclude>
                     </excludes>
                 </configuration>
             </plugin>

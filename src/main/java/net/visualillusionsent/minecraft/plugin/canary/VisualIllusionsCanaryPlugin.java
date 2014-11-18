@@ -1,18 +1,18 @@
 /*
- * This file is part of VIMCPlugin.
+ * This file is part of Visual Illusions Minecraft Plugin Base Library.
  *
  * Copyright © 2013-2014 Visual Illusions Entertainment
  *
- * VIMCPlugin is free software: you can redistribute it and/or modify
+ * Visual Illusions Minecraft Plugin Base Library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  *
- * VIMCPlugin is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * Visual Illusions Minecraft Plugin Base Library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License along with VIMCPlugin.
+ * You should have received a copy of the GNU Lesser General Public License along with Visual Illusions Minecraft Plugin Base Library.
  * If not, see http://www.gnu.org/licenses/lgpl.html.
  */
 package net.visualillusionsent.minecraft.plugin.canary;
@@ -38,7 +38,7 @@ import java.util.logging.Logger;
  *
  * @author Jason (darkdiplomat)
  */
-public abstract class VisualIllusionsCanaryPlugin extends Plugin implements VisualIllusionsPlugin {
+public class VisualIllusionsCanaryPlugin extends Plugin implements VisualIllusionsPlugin {
 
     private final ProgramChecker pChecker;
     private final Manifest manifest;
@@ -83,11 +83,22 @@ public abstract class VisualIllusionsCanaryPlugin extends Plugin implements Visu
     }
 
     @Override
+    public boolean buildSet() {
+        return getBuild() != null;
+    }
+
+
+    @Override
     public final String getBuild() {
         if (manifest != null) {
             return manifest.getMainAttributes().getValue("Implementation-Version");
         }
-        return "dev";
+        return null;
+    }
+
+    @Override
+    public boolean buildTimeSet() {
+        return getBuildTime() != null;
     }
 
     @Override
@@ -95,7 +106,7 @@ public abstract class VisualIllusionsCanaryPlugin extends Plugin implements Visu
         if (manifest != null) {
             return manifest.getMainAttributes().getValue("Build-Time");
         }
-        return "19700101-0000";
+        return null;
     }
 
     @Override
@@ -104,11 +115,16 @@ public abstract class VisualIllusionsCanaryPlugin extends Plugin implements Visu
     }
 
     @Override
+    public boolean wikiURLSet() {
+        return getWikiURL() != null;
+    }
+
+    @Override
     public final String getWikiURL() {
         if (manifest != null) {
             return manifest.getMainAttributes().getValue("Wiki-URL");
         }
-        return "http://visualillusionsent.net";
+        return null;
     }
 
     @Override
@@ -116,7 +132,7 @@ public abstract class VisualIllusionsCanaryPlugin extends Plugin implements Visu
         if (manifest != null) {
             return manifest.getMainAttributes().getValue("Issues-URL");
         }
-        return "https://github.com/Visual-Illusions/";
+        return null;
     }
 
     @Override
@@ -132,7 +148,7 @@ public abstract class VisualIllusionsCanaryPlugin extends Plugin implements Visu
         if (manifest != null) {
             return manifest.getMainAttributes().getValue("Copyright");
         }
-        return "2013-" + Calendar.getInstance().get(Calendar.YEAR);
+        return String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
     }
 
     @Override
@@ -163,7 +179,7 @@ public abstract class VisualIllusionsCanaryPlugin extends Plugin implements Visu
             return JarUtils.getManifest(this.getClass());
         }
         catch (IOException ioex) {
-            //IGNORED
+            // SUPPRESSED
         }
         return null;
     }
@@ -183,7 +199,7 @@ public abstract class VisualIllusionsCanaryPlugin extends Plugin implements Visu
                 return new URL(manifest.getMainAttributes().getValue("Status-URL"));
             }
             catch (MalformedURLException murlex) {
-
+                // SUPPRESSED
             }
         }
         return null;

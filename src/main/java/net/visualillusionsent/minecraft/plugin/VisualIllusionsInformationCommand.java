@@ -1,18 +1,18 @@
 /*
- * This file is part of VIMCPlugin.
+ * This file is part of Visual Illusions Minecraft Plugin Base Library.
  *
  * Copyright © 2013-2014 Visual Illusions Entertainment
  *
- * VIMCPlugin is free software: you can redistribute it and/or modify
+ * Visual Illusions Minecraft Plugin Base Library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  *
- * VIMCPlugin is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * Visual Illusions Minecraft Plugin Base Library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License along with VIMCPlugin.
+ * You should have received a copy of the GNU Lesser General Public License along with Visual Illusions Minecraft Plugin Base Library.
  * If not, see http://www.gnu.org/licenses/lgpl.html.
  */
 package net.visualillusionsent.minecraft.plugin;
@@ -37,16 +37,27 @@ public abstract class VisualIllusionsInformationCommand {
         this.plugin = plugin;
 
         ArrayList<String> pre = new ArrayList<String>();
-        pre.add(center("§B--- §A".concat(plugin.getPluginName()).concat(" §6v").concat(plugin.getPluginVersion()).concat(" §B---")));
+        pre.add(center(ChatFormat.CYAN + "--- " + ChatFormat.LIGHT_GREEN + plugin.getPluginName() + " " + ChatFormat.ORANGE + "v" + plugin.getPluginVersion() + " " + ChatFormat.CYAN + "---"));
         pre.add("$VERSION_CHECK$");
-        pre.add("§BJenkins Build: §A".concat(plugin.getBuild()));
-        pre.add("§BBuilt On: §A".concat(plugin.getBuildTime()));
-        pre.add("§BDeveloper(s): §A".concat(plugin.getDevelopers()));
-        pre.add("§BWebsite: §A".concat(plugin.getWikiURL()));
-        pre.add("§BIssues: §A".concat(plugin.getIssuesURL()));
+
+        if (plugin.buildSet()) {
+            pre.add(ChatFormat.LIGHT_GREEN + "Jenkins Build: " + ChatFormat.ORANGE + plugin.getBuild());
+        }
+
+        if (plugin.buildTimeSet()) {
+            pre.add(ChatFormat.LIGHT_GREEN + "Built On: " + ChatFormat.ORANGE + plugin.getBuildTime());
+        }
+
+        pre.add(ChatFormat.LIGHT_GREEN + "Developer(s): " + ChatFormat.ORANGE + plugin.getDevelopers());
+
+        if (plugin.wikiURLSet()) {
+            pre.add(ChatFormat.LIGHT_GREEN + "Website: " + ChatFormat.ORANGE + plugin.getWikiURL());
+        }
+
+        pre.add(ChatFormat.LIGHT_GREEN + "Issues: " + ChatFormat.ORANGE + plugin.getIssuesURL());
 
         // Next line should always remain at the end of the About
-        pre.add(center(String.format("§BCopyright © %s §AVisual §6Illusions §AEntertainment", plugin.getCopyYear())));
+        pre.add(center(String.format(ChatFormat.CYAN + "Copyright © %s " + ChatFormat.LIGHT_GREEN + "Visual " + ChatFormat.ORANGE + "Illusions " + ChatFormat.LIGHT_GREEN + "Entertainment", plugin.getCopyYear())));
 
         about = Collections.unmodifiableList(pre);
     }
@@ -65,9 +76,7 @@ public abstract class VisualIllusionsInformationCommand {
     }
 
     /**
-     * Gets the array of information lines
-     *
-     * @return the information lines
+     * Sends the array of information lines
      */
     protected final void sendInformation(ModMessageReceiver receiver) {
         for (String msg : about) {
@@ -96,8 +105,6 @@ public abstract class VisualIllusionsInformationCommand {
 
     /**
      * the lines to be injected between the version checks and the rest of the plugin information
-     *
-     * @return the injected message lines
      */
     protected void messageInject(ModMessageReceiver receiver) {
     }
