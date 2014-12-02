@@ -38,12 +38,13 @@ import java.util.logging.Logger;
  *
  * @author Jason (darkdiplomat)
  */
-public class VisualIllusionsCanaryPlugin extends Plugin implements VisualIllusionsPlugin {
+public abstract class VisualIllusionsCanaryPlugin extends Plugin implements VisualIllusionsPlugin {
 
     private final ProgramChecker pChecker;
     private final Manifest manifest;
     private final long[] versionArray;
     private final SelfIntegrityChecker sic;
+    private final Metrics metrics;
     protected final boolean debug;
     protected final WrappedLogger logger;
 
@@ -55,6 +56,14 @@ public class VisualIllusionsCanaryPlugin extends Plugin implements VisualIllusio
         this.pChecker.setConnectionTimeOut(1500);
         this.logger = new WrappedLogger(getLogman());
         this.sic = new SelfIntegrityChecker(this);
+        Metrics temp = null;
+        try {
+            temp = new Metrics(this);
+        }
+        catch (IOException e) {
+            logger.warning("Metrics failed to start, statistics will no be sent.");
+        }
+        this.metrics = temp;
     }
 
     @Override
@@ -63,6 +72,9 @@ public class VisualIllusionsCanaryPlugin extends Plugin implements VisualIllusio
             sic.selfTest();
             VisualIllusionsMinecraftPlugin.checkStatus(this);
             VisualIllusionsMinecraftPlugin.checkVersion(this);
+            if (metrics != null) {
+                metrics.start();
+            }
         }
         catch (Exception ex) {
             // SUPPRESSED
@@ -72,6 +84,9 @@ public class VisualIllusionsCanaryPlugin extends Plugin implements VisualIllusio
 
     @Override
     public void disable() {
+        if (metrics != null) {
+            metrics.stop();
+        }
     }
 
     @Override

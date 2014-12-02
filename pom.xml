@@ -2,21 +2,27 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.visualillusionsent</groupId>
     <artifactId>mcpluginlib</artifactId>
     <name>Visual Illusions Minecraft Plugin Base Library</name>
     <!-- Change minor version if library functionality changes, revision if a dependency version has changed -->
     <version>1.2.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <inceptionYear>2013</inceptionYear>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <viutils.version>1.4.1-SNAPSHOT</viutils.version>
         <canary.version>1.2.0-SNAPSHOT</canary.version>
     </properties>
+
     <description>
         Visual Illusions Minecraft Plugin Base Library
         Designed as a base for all Visual Illusions plugins
     </description>
+
     <licenses>
         <license>
             <name>GNU Lesser General Public License v3</name>
@@ -33,11 +39,13 @@
             </comments>
         </license>
     </licenses>
-    <inceptionYear>2013</inceptionYear>
+
+
     <organization>
         <name>Visual Illusions Entertainment</name>
         <url>http://visualillusionsent.net</url>
     </organization>
+
     <scm>
         <url>https://github.com/Visual-Illusions/VIMinecraftPlugin</url>
         <connection>GitHub</connection>
@@ -45,20 +53,24 @@
             scm:git:git@github.com:Visual-Illusions/VIMinecraftPlugin.git
         </developerConnection>
     </scm>
+
     <issueManagement>
         <url>http://github.com/Visual-Illusions/VIMinecraftPlugin/issues</url>
         <system>GitHub Issues Tracker</system>
     </issueManagement>
+
     <ciManagement>
         <url>http://ci.visualillusionsent.net/job/VIMinecraftPlugin</url>
         <system>Jenkins</system>
     </ciManagement>
+
     <distributionManagement>
         <repository>
             <id>vi-repo</id>
             <url>http://repo.visualillusionsent.net/repository/public/</url>
         </repository>
     </distributionManagement>
+
     <repositories>
         <!-- VIUtils & Canary -->
         <repository>
@@ -72,7 +84,13 @@
                 <updatePolicy>always</updatePolicy>
             </snapshots>
         </repository>
+        <repository>
+            <id>sponge-maven-repo</id>
+            <name>Sponge maven repo</name>
+            <url>http://repo.spongepowered.org/Sponge/maven</url>
+        </repository>
     </repositories>
+
     <dependencies>
         <dependency>
             <groupId>net.visualillusionsent</groupId>
@@ -86,7 +104,14 @@
             <version>${canary.version}</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.spongepowered</groupId>
+            <artifactId>spongeapi</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
+
     <build>
         <plugins>
             <!-- Timestamp for year -->
@@ -136,8 +161,8 @@
                         <include>src/main/java/**</include>
                     </includes>
                     <excludes>
-                        <exclude>src/main/java/net/visualillusionsent/minecraft/plugin/integrity/JarVerifier.java
-                        </exclude>
+                        <exclude>src/main/java/net/visualillusionsent/minecraft/plugin/integrity/JarVerifier.java</exclude>
+                        <exclude>src/main/java/net/visualillusionsent/minecraft/plugin/canary/Metrics.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>
