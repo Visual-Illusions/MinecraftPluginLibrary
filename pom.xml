@@ -14,7 +14,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <viutils.version>1.4.1-SNAPSHOT</viutils.version>
+        <viutils.version>1.4.1</viutils.version>
         <canary.version>1.2.0-SNAPSHOT</canary.version>
     </properties>
 
@@ -163,6 +163,7 @@
                     <excludes>
                         <exclude>src/main/java/net/visualillusionsent/minecraft/plugin/integrity/JarVerifier.java</exclude>
                         <exclude>src/main/java/net/visualillusionsent/minecraft/plugin/canary/Metrics.java</exclude>
+                        <exclude>src/main/java/net/visualillusionsent/minecraft/plugin/sponge/Metrics.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>
