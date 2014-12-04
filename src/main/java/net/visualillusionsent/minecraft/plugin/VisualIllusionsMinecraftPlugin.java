@@ -18,6 +18,7 @@
 package net.visualillusionsent.minecraft.plugin;
 
 import net.visualillusionsent.utils.ProgramChecker;
+import net.visualillusionsent.utils.TaskManager;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -51,19 +52,25 @@ public final class VisualIllusionsMinecraftPlugin {
         }
     }
 
-    public static void checkVersion(VisualIllusionsPlugin plugin) {
-        ProgramChecker programChecker = plugin.getProgramChecker();
+    public static void checkVersion(final VisualIllusionsPlugin plugin) {
+        final ProgramChecker programChecker = plugin.getProgramChecker();
         if (programChecker != null) {
-            ProgramChecker.Status isLatest = programChecker.checkStatus();
-            switch (isLatest) {
-                case ERROR:
-                    plugin.getPluginLogger().warning("Program Checker: " + programChecker.getStatusMessage());
-                    break;
-                case UPDATE:
-                    plugin.getPluginLogger().warning(programChecker.getStatusMessage());
-                    plugin.getPluginLogger().warning(String.format("You can view update info @ %s#ChangeLog", plugin.getWikiURL()));
-                    break;
-            }
+            TaskManager.scheduleDelayedTaskInMillis(new Runnable() {
+                                                        public void run() {
+                                                            ProgramChecker.Status response = programChecker.checkStatus();
+                                                            switch (response) {
+                                                                case ERROR:
+                                                                    plugin.getPluginLogger().warning("Program Checker: " + programChecker.getStatusMessage());
+                                                                    break;
+                                                                case UPDATE:
+                                                                    plugin.getPluginLogger().warning(programChecker.getStatusMessage());
+                                                                    plugin.getPluginLogger().warning(String.format("You can view update info @ %s#ChangeLog", plugin.getWikiURL()));
+                                                                    break;
+                                                            }
+                                                        }
+                                                    }, 1
+                                                   );
+
         }
         else {
             plugin.getPluginLogger().warning("No ProgramChecker instance available.");

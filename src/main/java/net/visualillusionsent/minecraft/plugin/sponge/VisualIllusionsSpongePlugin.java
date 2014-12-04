@@ -15,16 +15,15 @@
  * You should have received a copy of the GNU Lesser General Public License along with Visual Illusions Minecraft Plugin Base Library.
  * If not, see http://www.gnu.org/licenses/lgpl.html.
  */
-package net.visualillusionsent.minecraft.plugin.canary;
+package net.visualillusionsent.minecraft.plugin.sponge;
 
-import net.canarymod.plugin.Plugin;
 import net.visualillusionsent.minecraft.plugin.VisualIllusionsMinecraftPlugin;
 import net.visualillusionsent.minecraft.plugin.VisualIllusionsPlugin;
 import net.visualillusionsent.minecraft.plugin.integrity.SelfIntegrityChecker;
-import net.visualillusionsent.minecraft.plugin.util.ProgramCheckerConfiguration;
 import net.visualillusionsent.utils.JarUtils;
 import net.visualillusionsent.utils.ProgramChecker;
 import net.visualillusionsent.utils.ProgramStatus;
+import org.spongepowered.api.plugin.PluginContainer;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -35,51 +34,41 @@ import java.util.jar.Manifest;
 import java.util.logging.Logger;
 
 /**
- * Visual Illusions Canary Plugin extension
+ * Copyright (C) 2014 Visual Illusions Entertainment
+ * All Rights Reserved.
  *
- * @author Jason (darkdiplomat)
+ * @author Jason Jones (darkdiplomat)
  */
-public abstract class VisualIllusionsCanaryPlugin extends Plugin implements VisualIllusionsPlugin {
-
+public abstract class VisualIllusionsSpongePlugin implements PluginContainer, VisualIllusionsPlugin {
     private final ProgramChecker pChecker;
     private final Manifest manifest;
     private final long[] versionArray;
     private final SelfIntegrityChecker sic;
     private final Metrics metrics;
     protected final boolean debug;
-    protected final WrappedLogger logger;
 
-    public VisualIllusionsCanaryPlugin() {
+    public VisualIllusionsSpongePlugin() {
         this.manifest = readManifest();
         this.versionArray = createVersionArray();
         this.debug = Boolean.valueOf(System.getProperty("debug.".concat(getPluginName().toLowerCase()), "false"));
         this.pChecker = new ProgramChecker(getPluginName(), getVersionArray(), getStatusURL(), getStatus());
-        this.pChecker.disable();
         this.pChecker.setConnectionTimeOut(1500);
-        this.logger = new WrappedLogger(getLogman());
         this.sic = new SelfIntegrityChecker(this);
         Metrics temp = null;
         try {
-            temp = new Metrics(this);
+            temp = new Metrics(null, this);
         }
         catch (IOException e) {
-            logger.warning("Metrics failed to start, statistics will no be sent.");
+            //logger.warning("Metrics failed to start, statistics will no be sent.");
         }
         this.metrics = temp;
     }
 
-    @Override
     public boolean enable() {
         try {
             sic.selfTest();
-            ProgramCheckerConfiguration pcc = new ProgramCheckerConfiguration(getModuleConfig("program.checker"));
-            if (pcc.isEnabled()) {
-                this.pChecker.enable();
-                this.pChecker.setQueryInterval(pcc.queryInterval());
-                VisualIllusionsMinecraftPlugin.checkStatus(this);
-                VisualIllusionsMinecraftPlugin.checkVersion(this);
-            }
-
+            VisualIllusionsMinecraftPlugin.checkStatus(this);
+            VisualIllusionsMinecraftPlugin.checkVersion(this);
             if (metrics != null) {
                 metrics.start();
             }
@@ -88,13 +77,6 @@ public abstract class VisualIllusionsCanaryPlugin extends Plugin implements Visu
             // SUPPRESSED
         }
         return true;
-    }
-
-    @Override
-    public void disable() {
-        if (metrics != null) {
-            metrics.stop();
-        }
     }
 
     @Override
@@ -109,7 +91,6 @@ public abstract class VisualIllusionsCanaryPlugin extends Plugin implements Visu
     public boolean buildSet() {
         return getBuild() != null;
     }
-
 
     @Override
     public final String getBuild() {
@@ -194,7 +175,7 @@ public abstract class VisualIllusionsCanaryPlugin extends Plugin implements Visu
 
     @Override
     public Logger getPluginLogger() {
-        return logger;
+        return null; // TODO
     }
 
     private Manifest readManifest() {
@@ -227,4 +208,21 @@ public abstract class VisualIllusionsCanaryPlugin extends Plugin implements Visu
         }
         return null;
     }
+
+    // SPONGE
+    @Override
+    public String getId() {
+        return getPluginName();
+    }
+
+    @Override
+    public String getName() {
+        return getPluginName();
+    }
+
+    @Override
+    public String getVersion() {
+        return getPluginVersion();
+    }
+    //
 }
