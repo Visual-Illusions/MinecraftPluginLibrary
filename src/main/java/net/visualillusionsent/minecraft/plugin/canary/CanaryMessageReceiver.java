@@ -47,6 +47,12 @@ public class CanaryMessageReceiver implements ModMessageReceiver<MessageReceiver
         return receiver;
     }
 
+    @Override
+    public final int hashCode() {
+        return receiver.hashCode();
+    }
+
+    @Override
     public final boolean equals(Object obj) {
         if (!(obj instanceof CanaryMessageReceiver || obj instanceof MessageReceiver)) {
             return false;
@@ -59,5 +65,10 @@ public class CanaryMessageReceiver implements ModMessageReceiver<MessageReceiver
             msgrec = (MessageReceiver)obj;
         }
         return receiver.equals(msgrec);
+    }
+
+    @Override
+    public final String toString() {
+        return "CanaryMessageReceiver{" + receiver.toString() + "}";
     }
 }

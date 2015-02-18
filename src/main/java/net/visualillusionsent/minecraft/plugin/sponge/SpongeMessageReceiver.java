@@ -52,6 +52,12 @@ public class SpongeMessageReceiver implements ModMessageReceiver<CommandSource> 
         return source;
     }
 
+    @Override
+    public final int hashCode() {
+        return source.hashCode();
+    }
+
+    @Override
     public final boolean equals(Object obj) {
         if (!(obj instanceof SpongeMessageReceiver || obj instanceof CommandSource)) {
             return false;
@@ -64,5 +70,10 @@ public class SpongeMessageReceiver implements ModMessageReceiver<CommandSource> 
             cmdsource = (CommandSource)obj;
         }
         return source.equals(cmdsource);
+    }
+
+    @Override
+    public final String toString() {
+        return "SpongeMessageReceiver{" + source.toString() + "}";
     }
 }
