@@ -46,4 +46,18 @@ public class CanaryMessageReceiver implements ModMessageReceiver<MessageReceiver
     public final MessageReceiver unwrap() {
         return receiver;
     }
+
+    public final boolean equals(Object obj) {
+        if (!(obj instanceof CanaryMessageReceiver || obj instanceof MessageReceiver)) {
+            return false;
+        }
+        MessageReceiver msgrec;
+        if (obj instanceof CanaryMessageReceiver) {
+            msgrec = ((CanaryMessageReceiver)obj).unwrap();
+        }
+        else {
+            msgrec = (MessageReceiver)obj;
+        }
+        return receiver.equals(msgrec);
+    }
 }

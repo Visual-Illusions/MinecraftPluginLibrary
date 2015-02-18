@@ -51,4 +51,18 @@ public class SpongeMessageReceiver implements ModMessageReceiver<CommandSource> 
     public CommandSource unwrap() {
         return source;
     }
+
+    public final boolean equals(Object obj) {
+        if (!(obj instanceof SpongeMessageReceiver || obj instanceof CommandSource)) {
+            return false;
+        }
+        CommandSource cmdsource;
+        if (obj instanceof SpongeMessageReceiver) {
+            cmdsource = ((SpongeMessageReceiver)obj).unwrap();
+        }
+        else {
+            cmdsource = (CommandSource)obj;
+        }
+        return source.equals(cmdsource);
+    }
 }
