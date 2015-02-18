@@ -1,7 +1,7 @@
 /*
  * This file is part of Visual Illusions Minecraft Plugin Base Library.
  *
- * Copyright © 2013-2014 Visual Illusions Entertainment
+ * Copyright © 2013-2015 Visual Illusions Entertainment
  *
  * Visual Illusions Minecraft Plugin Base Library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
