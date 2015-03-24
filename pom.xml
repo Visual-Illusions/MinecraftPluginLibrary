@@ -8,14 +8,14 @@
     <artifactId>mcpluginlib</artifactId>
     <name>Visual Illusions Minecraft Plugin Base Library</name>
     <!-- Change minor version if library functionality changes, revision if a dependency version has changed -->
-    <version>1.2.0</version>
+    <version>1.2.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <inceptionYear>2013</inceptionYear>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <viutils.version>1.4.1</viutils.version>
-        <canary.version>1.2.0</canary.version>
+        <canary.version>1.2.1-SNAPSHOT</canary.version>
         <sponge.version>1.0</sponge.version>
     </properties>
 
