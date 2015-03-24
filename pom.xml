@@ -15,7 +15,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <viutils.version>1.4.1</viutils.version>
-        <canary.version>1.2.0-SNAPSHOT</canary.version>
+        <canary.version>1.2.0</canary.version>
+        <sponge.version>1.0</sponge.version>
     </properties>
 
     <description>
@@ -107,7 +108,7 @@
         <dependency>
             <groupId>org.spongepowered</groupId>
             <artifactId>spongeapi</artifactId>
-            <version>1.0</version>
+            <version>${sponge.version}</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
