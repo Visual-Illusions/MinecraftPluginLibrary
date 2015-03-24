@@ -8,7 +8,7 @@
     <artifactId>mcpluginlib</artifactId>
     <name>Visual Illusions Minecraft Plugin Base Library</name>
     <!-- Change minor version if library functionality changes, revision if a dependency version has changed -->
-    <version>1.2.0-SNAPSHOT</version>
+    <version>1.2.0</version>
     <packaging>jar</packaging>
     <inceptionYear>2013</inceptionYear>
 
